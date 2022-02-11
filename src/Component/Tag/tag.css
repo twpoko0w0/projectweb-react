@@ -1,0 +1,73 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@100;400;700&display=swap');
+
+.G {
+    background:darkgray;
+}
+button {
+    
+    margin: 0px;
+    font-family: 'Roboto', sans-serif;
+    cursor: pointer;
+    font-size: 14px;
+    color:#fff;
+    border-radius: 4px;
+    position: relative;
+    
+}
+.work{
+    background-color: #3082FE;
+    border: 1px solid #3082FE;
+    color: #fff;
+    
+    height: 16px;
+    line-height: 14px;
+    border-radius: 6px;
+    margin: 0px;
+    padding: 0px 2px;
+    font-size: 14px;
+}
+.lv_work{
+    
+    background-color: #FFA62B;
+    border: 1px solid #FFA62B;
+}
+
+.Lv_c{
+    
+    background-color: #1AC3CC;
+    border: 1px solid #1AC3CC;
+}
+.r1 {
+    background-color: #28A745;
+    border: 1px solid #28A745;
+}
+.r2{
+    background-color: #DC3545;
+    border: 1px solid #DC3545;
+}
+.r3 {
+    background-color: #424242;
+    border: 1px solid #424242;
+}
+.C1{
+    color: #000;
+    border-radius: 20px;
+    background-color: #fff;
+    border: 1px solid #fff;
+}
+.E1{
+    
+    background-color: #424242;
+    border: 1px solid #424242;
+}
+.P1{
+    
+    padding: 0px 2px;
+    color: #000;
+    background-color: #DCDCDC;
+    border: 1px solid #DCDCDC;
+}
+img {
+    float: left;
+    margin-top: 2px;
+}
