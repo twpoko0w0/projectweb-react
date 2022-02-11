@@ -1,10 +1,13 @@
-FROM node:lts-alpine
-ENV NODE_ENV=production
+FROM node:lts-alpine AS builder
+RUN mkdir -p /usr/src/app
 WORKDIR /usr/src/app
-COPY ["package.json", "package-lock.json*", "npm-shrinkwrap.json*", "./"]
-RUN npm install --production --silent && mv node_modules ../
+ENV REACT_APP_API_ENDPOINT=http://localhost:8080
+COPY package.json .
+RUN npm install --ignore-platform
 COPY . .
-EXPOSE 3000
-RUN chown -R node /usr/src/app
-USER node
-CMD ["npm", "start"]
+RUN npm run build
+
+FROM nginx:1.14.2-alpine
+COPY --from=0 /usr/src/app/build /usr/share/nginx/html
+WORKDIR /usr/share/nginx/html
+CMD ["nginx", "-g", "daemon off;"]

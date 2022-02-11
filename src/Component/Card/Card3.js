@@ -20,7 +20,7 @@ const GridCard = styled.div`
 function Card31() {
   const [card, setCard] = useState([]);
   useEffect(() => {
-    axios.get("http://localhost:8080/api/project").then((response) => {
+    axios.get(process.env.REACT_APP_API_ENDPOINT + "/api/project").then((response) => {
       setCard(response.data);
       // console.log(response.data)
     });
