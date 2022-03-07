@@ -1,7 +1,7 @@
 FROM node:lts-alpine AS builder
 RUN mkdir -p /usr/src/app
 WORKDIR /usr/src/app
-ENV REACT_APP_API_ENDPOINT=http://localhost:8080
+ENV REACT_APP_API_ENDPOINT=https://api.experiencehub-161090-final.win
 COPY package.json .
 RUN npm install --ignore-platform
 COPY . .
