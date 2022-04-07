@@ -3,7 +3,7 @@ RUN mkdir -p /usr/src/app
 WORKDIR /usr/src/app
 ENV REACT_APP_API_ENDPOINT=https://api.experiencehub-161090-final.win
 COPY package.json .
-RUN npm install
+RUN npm install --ignore-platform
 COPY . .
 RUN npm run build
 
