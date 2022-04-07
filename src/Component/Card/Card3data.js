@@ -91,7 +91,7 @@ const Card3data =[
         TagW : "MEMBER",
         Tag1 : <Button className ="Lv_c">สร้างประสบการณ์</Button> ,
         Cat : "Design",
-        Img : "https://images.unsplash.com/photo-1488590528505-98d2b5aba04b?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1470&q=80"
+        Img : "https://images.unsplash.com/photo-1567336144580-e439f43b680a?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1304&q=80"
     
     },
     {
@@ -102,7 +102,7 @@ const Card3data =[
         TagW : "MEMBER",
         Tag1 : <Button className ="Lv_c">สร้างประสบการณ์</Button> ,
         Cat : "Film & Video",
-        Img : "https://images.unsplash.com/photo-1488590528505-98d2b5aba04b?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1470&q=80"
+        Img : "https://images.unsplash.com/photo-1632373564214-5944ecde24bf?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1632&q=80"
     
     },
     {
@@ -135,7 +135,7 @@ const Card3data =[
         TagW : "MEMBER",
         Tag1 : <ColorButton><Button className ="lvworkf">ผลงาน</Button></ColorButton> ,
         Cat : "Games",
-        Img : "https://images.unsplash.com/photo-1488590528505-98d2b5aba04b?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1470&q=80"
+        Img : "https://images.unsplash.com/photo-1632373564214-5944ecde24bf?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1632&q=80"
     
     },
     {
@@ -157,7 +157,7 @@ const Card3data =[
         TagW : "MEMBER",
         Tag1 : <Button className ="Lv_c">สร้างประสบการณ์</Button> ,
         Cat : "Music",
-        Img : "https://images.unsplash.com/photo-1488590528505-98d2b5aba04b?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1470&q=80"
+        Img : "https://images.unsplash.com/photo-1632373564214-5944ecde24bf?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1632&q=80"
     
     },
     {
@@ -174,7 +174,7 @@ const Card3data =[
     {
         id: 14 ,
         title :"MMMMM" ,
-        Tag0 : "UX/UI" ,
+        Tag0 : "UX/UI",
         Tag01 : "Front-end" ,
         TagW : "MEMBER",
         Tag1 : <ColorButton><Button className ="lvworkf">ผลงาน</Button></ColorButton> ,
@@ -190,7 +190,7 @@ const Card3data =[
         TagW : "MEMBER",
         Tag1 : <Button className ="Lv_c">สร้างประสบการณ์</Button> ,
         Cat : "Ohter",
-        Img : "https://images.unsplash.com/photo-1488590528505-98d2b5aba04b?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1470&q=80"
+        Img : "https://images.unsplash.com/photo-1632373564214-5944ecde24bf?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1632&q=80"
     
     }
 ]
