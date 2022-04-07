@@ -3,7 +3,7 @@ RUN mkdir -p /usr/src/app
 WORKDIR /usr/src/app
 ENV REACT_APP_API_ENDPOINT=http://localhost:8080
 COPY package.json .
-RUN npm install --ignore-platform
+RUN npm install
 COPY . .
 RUN npm run build
 

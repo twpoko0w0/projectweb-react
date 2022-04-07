@@ -64,87 +64,42 @@ const StyleElem = styled.div`
     padding: 0px 2px;
     font-size: 14px;
   }
-  .e1owner {
-    background-color: #FFA62B;
-    border: 1px solid #424242;
-  }
-
-  .e1moderator {
-    background-color: #5961F9;
-    border: 1px solid #424242;
-  }
-
-  .e1member {
+  .e1 {
     background-color: #424242;
     border: 1px solid #424242;
   }
 `;
 
-const findCardRole = [
-  { id: 1, role: "Owner" },
-  { id: 2, role: "Moderator" },
-  { id: 3, role: "Member" },
-]
-
-function CardTeam({ member, tagRel, projectTag }) {
+function CardTeam() {
   const [teams, setTeams] = useState(CardRandom);
-
-  const memberElement = member.sort((a, b) => a.id - b.id).map(x => {
-    const role = findCardRole.find(y => y.id === x.project_role_id).role
-
-    if (x.project_tag_rel_id !== 191) {
-      let a = tagRel.find(y => y.id === x.project_tag_rel_id).project_tag_id;
-      let b = projectTag.find(z => z.id === parseInt(a)).project_tag_name;
-
-      return (
-        <StyleElem >
-          <div className="gridItems mt-4" >
-            <div className="ItemsAll">
-              <Image className="ProTeam" src={x.user_image_link ? x.user_image_link : "https://cdn-icons-png.flaticon.com/512/847/847969.png"} roundedCircle />
-              <div className="TextTeam">
-                <span className="text">{x.first_name}</span> <br />
-                <button className="work">{b}</button>{" "}
-              </div>
-            </div>
-            <div className="tag">
-              <button className="e1member">{role}</button>
-
-            </div>
-          </div>
-          <hr className="Hr-Teams" />
-        </StyleElem>
-      )
-    } else {
-      return (
-        <StyleElem >
-          <div className="gridItems mt-4" >
-            <div className="ItemsAll">
-              <Image className="ProTeam" src={x.user_image_link ? x.user_image_link : "https://cdn-icons-png.flaticon.com/512/847/847969.png"} roundedCircle />
-              <div className="TextTeam">
-                <span className="text">{x.first_name}</span> <br />
-
-              </div>
-            </div>
-            <div className="tag">
-              <button className="e1member">{role}</button>
-
-            </div>
-          </div>
-          <hr className="Hr-Teams" />
-        </StyleElem>
-      )
-    }
-
-  })
-
   return (
     <StyleBg>
       <div className="BGT">
         <h4 className="Text-teams">ทีมปัจจุบัน</h4>
-        {memberElement}
+        {teams.map((elem,idex) => {
+          const { Tag0, TagW } = elem ;
+          return (
+            <StyleElem key={idex}>
+              <div className="gridItems" >
+                <div className="ItemsAll">
+                  <Image className="ProTeam" src={img} roundedCircle />
+                  <div className="TextTeam">
+                    <span className="text">พรรยู่ษา </span> <br />
+                    <button className="work">{Tag0}</button>{" "}
+                  </div>
+                </div>
+                <div className="tag">
+                  <button className="e1">{TagW}</button>{" "}
+                </div>
+              </div>
+              <hr className="Hr-Teams" />
+            </StyleElem>
+          );
+        })}
+       
       </div>
     </StyleBg>
-  )
+  );
 }
 
 export default CardTeam;
