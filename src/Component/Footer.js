@@ -6,8 +6,6 @@ import styled from "styled-components";
 const Style = styled.div`
   .GridStyle {
     bottom: 0;
-    left: 0;
-    right: 0;
   }
 `;
 
@@ -24,7 +22,7 @@ export default function Footer() {
               <Col className="col-md-3  ">
                 <img style={{ width: "88px" }} src={LogoApp} alt="LogoApp" />
               </Col>
-              <Row className="align-items-end " style={{ marginTop: "6rem" }}>
+              <Row className="align-items-end " style={{ marginTop: "12rem" }}>
                 <Col style={{ padding: "6px 0" }}>
                   <span style={{ padding: "10px" }}>Term & Conditions</span>
                 </Col>
