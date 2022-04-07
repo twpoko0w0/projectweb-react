@@ -7,7 +7,7 @@ import CreateStep2 from './Page/Register/CreateStep2';
 import CreateStep3 from './Page/Register/CreateStep3';
 import CreateStep4 from './Page/Register/CreateStep4';
 import StartProjectMain from './Page/StartProjectMain';
-import { StartProStep } from './Page/StartProject/StartProStep'
+// import { StartProStep } from './Page/StartProject/StartProStep'
 import ProjectDetail from './Page/ProjectDetail'
 import { ProjectItem } from './Page/ProjectList/ProjectItem/ProjectItem'
 import TabManage from './Component/Tab/TabManage';
@@ -37,7 +37,7 @@ function App() {
         <Route path="Login" element={<Login />}></Route>
         <Route path="Create" element={<CreateStep1 />}></Route>
         <Route path="StartProject" element={<StartProjectMain />}></Route>
-        <Route path="StartProject/Step" element={<StartProStep {...props} />} />
+        {/* <Route path="StartProject/Step" element={<StartProStep {...props} />} /> */}
         <Route path="/ProjectDetail/:id" element={<ProjectDetail {...props} />}></Route>
         <Route path="/ProjectManager/:id" element={<ProjectManager {...props} />}></Route>
         <Route path="/Signup2" element={<Signup />}></Route>
