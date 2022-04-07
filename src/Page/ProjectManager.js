@@ -8,7 +8,6 @@ import AccordionQuestion from "../Component/Accordion/AccordionQuestion";
 import styled from "styled-components";
 import { Link, useParams, useNavigate } from 'react-router-dom';
 import axios from "axios";
-import { useForm } from "react-hooks-helper";
 import { storage } from "../firebase";
 import Spinner from "../Component/LoadingSpinner/Spinner";
 import firebase from 'firebase/compat/app';
