@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Container, Nav, Button, Row, Col } from "react-bootstrap";
 
 import Card3data from "./Card/Card3data";
@@ -8,6 +8,8 @@ import styled from "styled-components";
 import Combobox from "./Combobox/Bobox";
 import FilterIcon from "./logo/filter_list_black_24dp.svg";
 import Card3 from "./Card/Card3";
+import DataWork from "../data/Working";
+import { ProjectItem } from "./ProjectItem";
 
 const ButtonStyle = styled.div`
   .filter {
@@ -37,17 +39,29 @@ const TextStyle = styled.div`
   }
 `;
 
-export default function Navcat() {
+export default function Navcat({ project, items, setItems }) {
   const [isOpen, setIsOpen] = useState(false);
-  const [items,setItems] = useState(Card3data);
+  const [tag, setTag] = useState(project);
+  // console.log("From Navcat: " + items);
 
-  const filrerItems = (categItem) =>{
-    const updatedIteams = Card3data.filter((curElem)=>{
-      return curElem.Cat === categItem ;
+  const handleSelect = (e) => {
+    setTag(e.target.value)
+  }
+
+  const filrerItems = (categItem) => {
+    const updatedIteams = project.filter((curElem) => {
+      return curElem.project_category_name === categItem;
     })
-
     setItems(updatedIteams);
   }
+
+  // const filrerItems1 = (categTag) => {
+  //   const updatedTags = project.filter((curElem) => {
+  //     return curElem.Tag01 === categTag;
+  //   })
+  //   setTag(updatedTags);
+  // }
+
   return (
     <div className="Grid_NAV">
       <hr />
@@ -59,71 +73,7 @@ export default function Navcat() {
             as="ul"
           >
             <Dropdown1 />
-            <div className="animation start-ALL"></div>
-            <Nav.Link
-              style={{ padding: "8px 16px" }}
-              className="Text_a"
-              eventKey="0"
-            >
-              All
-            </Nav.Link>
-            <Nav.Link
-              style={{ padding: "8px 16px" }}
-              className="Text_a"
-              eventKey="1"
-              onClick={() =>filrerItems('Art')}
-            >
-              Art
-            </Nav.Link>
-            <Nav.Link
-              style={{ padding: "8px 16px" }}
-              className="Text_a"
-              eventKey="2"
-            >
-              Craft
-            </Nav.Link>
-            <Nav.Link
-              style={{ padding: "8px 16px" }}
-              className="Text_a"
-              eventKey="3"
-            >
-              Design
-            </Nav.Link>
-            <Nav.Link
-              style={{ padding: "8px 16px" }}
-              className="Text_a"
-              eventKey="4"
-            >
-              Film & Video
-            </Nav.Link>
-            <Nav.Link
-              style={{ padding: "8px 16px" }}
-              className="Text_a"
-              eventKey="5"
-            >
-              Game
-            </Nav.Link>
-            <Nav.Link
-              style={{ padding: "8px 16px" }}
-              className="Text_a"
-              eventKey="5"
-            >
-              Music
-            </Nav.Link>
-            <Nav.Link
-              style={{ padding: "8px 16px" }}
-              className="Text_a"
-              eventKey="5"
-            >
-              Technology
-            </Nav.Link>
-            <Nav.Link
-              style={{ padding: "8px 16px" }}
-              className="Text_a"
-              eventKey="5"
-            >
-              Other
-            </Nav.Link>
+            <NavcatITems filrerItems={filrerItems} setItems={setItems} project={project} />
 
             <div className="collapsible" style={{ alignSelf: "center" }}>
               <ButtonStyle>
@@ -151,9 +101,10 @@ export default function Navcat() {
         )}
       </Container>
       <hr style={{ marginBottom: "0" }} />
-      <Container fluid ="lg" style={{maxWidth:"1140px"}}>
-            <Card3/>
+      <Container fluid="lg" style={{ maxWidth: "1140px" }}>
+        <Card3 items={items} />
       </Container>
+
     </div>
   );
 }

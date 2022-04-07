@@ -3,10 +3,11 @@
     max-width: 1140px;
 }
 nav {
+   
     font-family: 'Roboto', sans-serif;
     padding: 0px;
     height: 80px;
-    background: #fff;
+    background: #ffff;
 }
 a.navbar-brand{
     padding-right: 60px;

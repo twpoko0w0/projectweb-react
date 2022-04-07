@@ -1,79 +1,49 @@
-import React from 'react'
-import { Accordion } from "react-bootstrap"
+import React, { useEffect, useState, useReducer } from "react";
+import { Accordion } from "react-bootstrap";
+import { Link, useParams, NavLink } from 'react-router-dom';
+import axios from "axios";
 
 
 export default function AC1() {
-    return (
-        <div style ={{margin:"80px 0px"}}>
-            <Accordion className = "AC1" defaultActiveKey="0" style ={{maxWidth:"641px", Height:"100%" ,borderRadius:"12px"}}>
-            <Accordion.Item eventKey="0">
-                <Accordion.Header>คำถามที่ 1</Accordion.Header>
-                <Accordion.Body>
-                ผมสามารถเขียน HTML, CSS, Java script ได้ แต่ React ไม่เคยใช้งาน จะสามารถเข้าร่วมโปรเจคได้ไหมครับ?
-                   
+    const { id } = useParams(null);
+    const [projectQuestion, setProjectQuestion] = useState([])
+
+    useEffect(() => {
+        run();
+    }, [])
+
+    function GetQuestion() {
+        return new Promise((resolve, reject) => {
+            axios.get(process.env.REACT_APP_API_ENDPOINT + "/api/projectquestion")
+                .then((res) => {
+                    const resData = res.data
+                    const thisProjectQuestion = resData.filter(x => x.project_id === parseInt(id) && x.project_answer !== "")
+                    setProjectQuestion(thisProjectQuestion)
+                });
+            resolve()
+        })
+    }
+
+    const questionElement = projectQuestion.map((x, index) => {
+        return (
+            <Accordion.Item eventKey={x.id} key={index}>
+                <Accordion.Header>{x.project_question}</Accordion.Header>
+                <Accordion.Body className="bg-light">
+                    {x.project_answer}
                 </Accordion.Body>
-        </Accordion.Item>
-            <Accordion.Item eventKey="1">
-                <Accordion.Header>คำถามที่ 2</Accordion.Header>
-                    <Accordion.Body>
-                        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
-                        tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim
-                        veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea
-                        commodo consequat. Duis aute irure dolor in reprehenderit in voluptate
-                        velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat
-                        cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id
-                        est laborum.
-                    </Accordion.Body>
             </Accordion.Item>
-            <Accordion.Item eventKey="2">
-                <Accordion.Header>คำถามที่ 3</Accordion.Header>
-                    <Accordion.Body>
-                        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
-                        tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim
-                        veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea
-                        commodo consequat. Duis aute irure dolor in reprehenderit in voluptate
-                        velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat
-                        cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id
-                        est laborum.
-                    </Accordion.Body>
-            </Accordion.Item>
-            <Accordion.Item eventKey="3">
-                <Accordion.Header>คำถามที่ 4</Accordion.Header>
-                    <Accordion.Body>
-                        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
-                        tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim
-                        veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea
-                        commodo consequat. Duis aute irure dolor in reprehenderit in voluptate
-                        velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat
-                        cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id
-                        est laborum.
-                    </Accordion.Body>
-            </Accordion.Item>
-            <Accordion.Item eventKey="4">
-                <Accordion.Header>คำถามที่ 5</Accordion.Header>
-                    <Accordion.Body>
-                        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
-                        tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim
-                        veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea
-                        commodo consequat. Duis aute irure dolor in reprehenderit in voluptate
-                        velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat
-                        cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id
-                        est laborum.
-                    </Accordion.Body>
-            </Accordion.Item>
-            <Accordion.Item eventKey="5">
-                <Accordion.Header>คำถามที่ 6</Accordion.Header>
-                    <Accordion.Body>
-                        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
-                        tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim
-                        veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea
-                        commodo consequat. Duis aute irure dolor in reprehenderit in voluptate
-                        velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat
-                        cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id
-                        est laborum.
-                    </Accordion.Body>
-            </Accordion.Item>
-        </Accordion>
+        )
+    })
+
+    async function run() {
+        await GetQuestion();
+    }
+    return (
+        <div style={{ margin: "80px 0px" }}>
+
+            <Accordion className="AC1" defaultActiveKey="0" style={{ maxWidth: "641px", Height: "100%", borderRadius: "12px" }}>
+                {questionElement}
+            </Accordion>
         </div>
     )
 }
