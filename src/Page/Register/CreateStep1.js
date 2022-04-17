@@ -128,7 +128,7 @@ export default function CreateStep2() {
       const user = await firebase.auth().createUserWithEmailAndPassword(emailRef.current.value, 123456)
         .then((res) => {
           res.user.sendEmailVerification({
-            url: "http://localhost:2022/signup/step3",
+            url: process.env.EMAIL_CONFIRM_URL + "/signup/step3",
           });
           // return createUser({ email, uid: res.user.uid, name });
         })
@@ -162,7 +162,7 @@ export default function CreateStep2() {
                     <div className="form-check">
                       <input className="form-check-input" type="checkbox" id="defaultCheck1" onChange={() => handleChange()} required />
                       <label className="form-check-label" >
-                        ยอมรับนโยบาย    <a href="#" className="Textpassword" >ความเป็นส่วนตัว</a> {''}
+                        ยอมรับนโยบาย    <a href="PDPA" className="Textpassword" >ความเป็นส่วนตัว</a> {''}
                       </label>
                     </div>
                     <StyleBtnLogin>

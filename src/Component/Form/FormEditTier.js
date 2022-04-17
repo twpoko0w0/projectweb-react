@@ -18,7 +18,7 @@ const StyleFormTier = styled.div`
 // }
 `;
 
-function FormEditTier({ projectDetail, updateProjectDetail, setUpdateProjectDetail, isOpen, setIsOpen, defaultValue }) {
+function FormEditTier({ projectDetail, updateProjectDetail, setUpdateProjectDetail, isOpen, setIsOpen, defaultValue, currUserRole }) {
   const [Tier, setTier] = useState([]);
   const { id } = useParams()
 
@@ -43,50 +43,90 @@ function FormEditTier({ projectDetail, updateProjectDetail, setUpdateProjectDeta
       })
   }
 
-  return (
-    <StyleFormTier>
-      <Row >
-        <Col sm="2"><label className="Text-bold">ระดับ:</label></Col>
-        {isOpen === "tier" ? (
-          <>
+  if (currUserRole !== 3) {
+    return (
+      <StyleFormTier>
+        <Row >
+          <Col sm="2"><label className="Text-bold">ระดับ:</label></Col>
+          {isOpen === "tier" ? (
+            <>
+              <Col style={{ minHeight: '40px' }}>
+                <Form.Select className="select-style" value={updateProjectDetail.project_seriousness_id}
+                  onChange={e => setUpdateProjectDetail({ ...updateProjectDetail, project_seriousness_id: e.target.value })}>
+                  <option value="1">งานอดิเรก</option>
+                  <option value="2">ผลงาน</option>
+                </Form.Select>
+              </Col>
+              <Col sm="auto">
+                <Button type="submit" className='bg-primary ms-4' onClick={UpdateSeriousnessId}>
+                  บันทึก
+                </Button>
+                <span
+                  onClick={() => handleClose()}
+                  className='Text-cancel'
+                  style={{ color: "#0d6efd", padding: "0px 20px" }}
+                >
+                  ยกเลิก
+                </span>
+              </Col>
+            </>
+          ) : (<>
             <Col style={{ minHeight: '40px' }}>
-              <Form.Select className="select-style" value={updateProjectDetail.project_seriousness_id}
-                onChange={e => setUpdateProjectDetail({ ...updateProjectDetail, project_seriousness_id: e.target.value })}>
-                <option value="1">งานอดิเรก</option>
-                <option value="2">ผลงาน</option>
-              </Form.Select>
+              <p className="Text-data px-3">{projectDetail.project_seriousness_name}</p>
             </Col>
             <Col sm="auto">
-              <Button type="submit" className='bg-primary ms-4' onClick={UpdateSeriousnessId}>
-                บันทึก
-              </Button>
               <span
-                onClick={() => handleClose()}
-                className='Text-cancel'
-                style={{ color: "#0d6efd", padding: "0px 20px" }}
+                className="edit-btn"
+                onClick={() => handleEditTierClick(Tier)}
               >
-                ยกเลิก
+                แก้ไข
               </span>
             </Col>
-          </>
-        ) : (<>
-          <Col style={{ minHeight: '40px' }}>
-            <p className="Text-data px-3">{projectDetail.project_seriousness_name}</p>
-          </Col>
-          <Col sm="auto">
-            <span
-              className="edit-btn"
-              onClick={() => handleEditTierClick(Tier)}
-            >
-              Edit
-            </span>
-          </Col>
-        </>)
-        }
-      </Row>
-      <hr />
-    </StyleFormTier>
-  )
+          </>)
+          }
+        </Row>
+        <hr />
+      </StyleFormTier>
+    )
+  } else {
+    return (
+      <StyleFormTier>
+        <Row >
+          <Col sm="2"><label className="Text-bold">ระดับ:</label></Col>
+          {isOpen === "tier" ? (
+            <>
+              <Col style={{ minHeight: '40px' }}>
+                <Form.Select className="select-style" value={updateProjectDetail.project_seriousness_id}
+                  onChange={e => setUpdateProjectDetail({ ...updateProjectDetail, project_seriousness_id: e.target.value })}>
+                  <option value="1">งานอดิเรก</option>
+                  <option value="2">ผลงาน</option>
+                </Form.Select>
+              </Col>
+              <Col sm="auto">
+                <Button type="submit" className='bg-primary ms-4' onClick={UpdateSeriousnessId}>
+                  บันทึก
+                </Button>
+                <span
+                  onClick={() => handleClose()}
+                  className='Text-cancel'
+                  style={{ color: "#0d6efd", padding: "0px 20px" }}
+                >
+                  ยกเลิก
+                </span>
+              </Col>
+            </>
+          ) : (<>
+            <Col style={{ minHeight: '40px' }}>
+              <p className="Text-data px-3">{projectDetail.project_seriousness_name}</p>
+            </Col>
+          </>)
+          }
+        </Row>
+        <hr />
+      </StyleFormTier>
+    )
+  }
+
 }
 
 export default FormEditTier

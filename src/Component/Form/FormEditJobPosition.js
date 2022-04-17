@@ -80,7 +80,7 @@ function FormEditJobPosition({ objectTag, projectTag }) {
     const findQuantity = quantityId.find(thisQuantity => thisQuantity.quantity === x.project_quantity).id
     return (
       <>
-        <div style={{ height: "56px" }} key={index} >
+        <div key={index} >
           <Row  >
             {(isEditingTag === x.project_tag_relation_id) ? <>
               <Col sm={2} >
@@ -142,8 +142,8 @@ function FormEditJobPosition({ objectTag, projectTag }) {
               </Col>
             </>}
           </Row>
+          <hr />
         </div>
-        <hr style={{ marginTop: "0px" }} />
       </>
     )
   })
@@ -165,7 +165,6 @@ function FormEditJobPosition({ objectTag, projectTag }) {
       project_position_quantity_id: newQuantity
     }
     const { project_tag_rel_id, project_tag_id, project_id, project_tag_role, project_position_quantity_id } = objectTagRel
-    console.log("UpdateRel");
 
     axios.put(process.env.REACT_APP_API_ENDPOINT + "/api/projecttagrel/" + project_tag_rel_id, {
       project_id: project_id,

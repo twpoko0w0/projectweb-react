@@ -17,6 +17,8 @@ import Profileuser from './Page/Profileuser'
 import { Link, useNavigate } from "react-router-dom"
 import firebase from 'firebase/compat/app';
 import ProfileSetting from "./Page/ProfileSetting";
+import LoginV2 from "./Page/LoginV2";
+import PDPA from "./Page/PDPA"
 
 function App() {
   const navigate = useNavigate();
@@ -34,8 +36,10 @@ function App() {
     <>
       <Routes>
         <Route path="/" element={<Homepage />}></Route>
-        <Route path="Login" element={<Login />}></Route>
+        <Route path="Login" element={<LoginV2 />}></Route>
+        <Route path="Logindo" element={<Login />}></Route>
         <Route path="Create" element={<CreateStep1 />}></Route>
+        <Route path="PDPA" element={<PDPA />}></Route>
         <Route path="StartProject" element={<StartProjectMain />}></Route>
         <Route path="StartProject/Step" element={<StartProStep {...props} />} />
         <Route path="/ProjectDetail/:id" element={<ProjectDetail {...props} />}></Route>

@@ -12,7 +12,7 @@ const Stylelist = styled.div`
   @import url("https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap");
 
   .list-group {
-    width: 736px;
+    
     background: #fff;
     box-shadow: 0px 16px 48px rgba(0, 0, 0, 0.176);
   }
@@ -47,10 +47,42 @@ const Stylelist = styled.div`
     align-self: center;
     color: #3082fe;
   }
-  .material-icons {
-    float: right;
-    color: #000;
-    margin-left: 20px;
+  .Plus{
+    display: flex;
+    width: 124px; 
+    height: 44px; 
+    padding: 10px;
+  }
+  .icon-1{
+    padding-right: 4px;
+  }
+  .box-content{
+    display: flex;
+    align-self: center;
+  }
+  .style-drop{
+    margin-left: 20px
+  }
+  .dropdown-box{
+    display: flex;
+  }
+  span {
+    margin: 0px;
+    padding: 0px;
+    align-items: center;
+  }
+  .dropdown {
+    width: 24px;
+    height: 24px;
+    background-color: var(--bg);
+    border: none;
+    padding: 0rem;
+  }
+  .dropdown-toggle::after{
+    display: none;
+  }
+  .dropdown-menu{
+    min-width: 80px;
   }
 `;
 
@@ -92,17 +124,17 @@ function StartProStep4({ formdata, setFormdata, projectTag, tagList, newProjectI
   }
   console.log(projectTagId)
   return (
-    <div >
+    <Stylelist style={{ padding: "0 14rem" }} >
       <h1 className="d-flex justify-content-center">ชั้นตอนที่ 4: ตามหาตำแหน่งที่ต้องการ</h1>
       <h5 className="d-flex justify-content-center">กำหนดตำแหน่งที่คุณต้องการ เพื่อร่วมสร้างโปรเจคกับคุณ</h5>
-      <Form as={Row} className="mt-5">
+      <div as={Row} className="mt-5">
         <div className="shadow p-3 mb-5 bg-body rounded">
           <Row>
-            <Col xs={12} md={10}>
+            <Col xs={12} md={9}>
               {" "}
               <h5><b>กรอกจำนวนตำแหน่ง</b></h5>
             </Col>
-            <Col xs={12} md={2}>
+            <Col md="3">
               <Form.Select name="projectPositionQuantity" value={projectPositionQuantity} onChange={(e) => setFormdata({ ...formdata, projectPositionQuantity: e.target.value })}>
                 <option value={1}>1 ตำแหน่ง</option>
                 <option value={2}>2 ตำแหน่ง</option>
@@ -122,26 +154,26 @@ function StartProStep4({ formdata, setFormdata, projectTag, tagList, newProjectI
             className="Plus mt-4"
             type="addicon"
             variant="primary"
-            style={{ width: "124px", height: "44px", padding: "10px" }}
             onClick={AddList}
           >
-            <img src={Add} alt="ADD" />
+            <span class="material-icons-outlined icon-1">
+              add_circle
+            </span>
             เพิ่มลงลิสต์
           </Button>
         </div>
 
-      </Form>
-      <div className="list-box" style={{ marginTop: "40px" }}>
-        <Stylelist>
-          <div>
-            <h5><b>หน้าที่ในลิสท์</b></h5>
-            <ListGroup className="mt-3">
-              {tagElement}
-            </ListGroup>
-          </div>
-        </Stylelist>
       </div>
-    </div>
+      <div className="list-box" style={{ marginTop: "40px" }}>
+
+        <div>
+          <h5><b>หน้าที่ในลิสท์</b></h5>
+          <ListGroup className="mt-3">
+            {tagElement}
+          </ListGroup>
+        </div>
+      </div>
+    </Stylelist>
   );
 }
 

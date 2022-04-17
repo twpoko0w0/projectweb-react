@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useReducer } from "react";
 import NavbarProfile from "../Component/NavbarProfile";
 import Profile from "../All_Img/bd1680f33671fd642f3a61e0d6ce3de7.jpg";
 import Footer from "../Component/Footer";
@@ -8,7 +8,7 @@ import TabProfile from "../Component/Tab/TabProfile";
 import Editicon from "../Component/logo/edit_black_24dp.svg";
 import Proicon from "../Component/Card/icon-img/icons8-github.svg";
 import firebase from 'firebase/compat/app';
-import { Link, useNavigate, Navigate, NavLink } from "react-router-dom"
+import { Link, useNavigate, Navigate, NavLink, useParams } from "react-router-dom"
 import Navbar1 from "../Component/Navbar";
 import axios from "axios";
 import Spinner from "../Component/LoadingSpinner/Spinner";
@@ -61,7 +61,9 @@ display: flex;
   padding: 4px;
  }
 `;
-function Profileuser({ currentUser }) {
+function Profileuser() {
+  const { id } = useParams();
+  const [_, forceUpdate] = useReducer((x) => x + 1, 0);
   const [software, setSoftware] = useState([])
   const [modalShow, setModalShow] = useState(false);
   const [isLoading, setIsLoading] = useState(false)
@@ -76,6 +78,8 @@ function Profileuser({ currentUser }) {
   const [userProjectRel, setUserProjectRel] = useState([])
   const [userProjectData, setUserProjectData] = useState([])
   const [userProjectDataAll, setUserProjectDataAll] = useState([])
+  const [userProjectFilter, setUserProjectFilter] = useState([])
+  const [userProjectFilterAll, setUserProjectFilterAll] = useState([])
   const [userTag1, setuserTag1] = useState({
     id: 0,
     user_id: "",
@@ -91,23 +95,30 @@ function Profileuser({ currentUser }) {
     user_id: "",
     user_tag_id: 0
   })
-  const [updateUserWebsite, setUpdateUserWebsite] = useState("")
-  const [updateUserBlog, setUpdateUserBlog] = useState("")
-  const [updateUserPortfolio, setUpdateUserPortfolio] = useState("")
+  const [softwareRel, setSoftwareRel] = useState([])
+  const [softwareRelNew, setSoftwareRelNew] = useState([])
+  const [softwareRelDel, setSoftwareRelDel] = useState([])
+  const [currentUser, setCurrentUser] = useState([])
 
   useEffect(() => {
+    let isMounted = true;
     firebase.auth().onAuthStateChanged(user => {
       if (!user) {
         return navigate({ pathname: '/' })
       } else {
-        axios.get(process.env.REACT_APP_API_ENDPOINT + "/api/users")
+        if (isMounted) {
+          setCurrentUser(user)
+        }
+
+        axios.get(process.env.REACT_APP_API_ENDPOINT + "/api/users/" + id)
           .then((res) => {
             const resUser = res.data;
-            const thisUser = resUser.find(x => x.id === user.uid)
-            const skillUser = thisUser.user_skill.split(",")
-            const tagUser = thisUser.user_tag_name.split(",")
-            const softwareUser = thisUser.user_software.split(",")
-            const softwareImage = thisUser.software_image_link.split(",")
+            // const thisUser = resUser.find(x => x.id === user.uid)
+
+            const skillUser = resUser.user_skill.split(",")
+            const tagUser = resUser.user_tag_name.split(",")
+            const softwareUser = resUser.user_software.split(",")
+            const softwareImage = resUser.software_image_link.split(",")
 
             for (let i = 0; i < softwareUser.length; i++) {
               const object = {
@@ -117,12 +128,12 @@ function Profileuser({ currentUser }) {
               }
               userSoftware.push(object);
             }
-            setUserSkill(skillUser);
-            setUserTag(tagUser);
-            // setUserSoftware(softwareUser);
-            console.log(thisUser);
-            setUserData(thisUser)
-            setIsLoading(true)
+
+            if (isMounted) {
+              setUserSkill(skillUser);
+              setUserTag(tagUser);
+              setUserData(resUser)
+            }
           });
 
         axios.get(process.env.REACT_APP_API_ENDPOINT + "/api/usertagrel")
@@ -132,27 +143,46 @@ function Profileuser({ currentUser }) {
             thisUserTagRel.reverse();
             setUserTagEditProfile(thisUserTagRel)
 
-            setuserTag1({ id: thisUserTagRel[0].id, user_id: thisUserTagRel[0].user_id, user_tag_id: thisUserTagRel[0].user_tag_id })
-            setuserTag2({ id: thisUserTagRel[1].id, user_id: thisUserTagRel[1].user_id, user_tag_id: thisUserTagRel[1].user_tag_id })
-            setuserTag3({ id: thisUserTagRel[2].id, user_id: thisUserTagRel[2].user_id, user_tag_id: thisUserTagRel[2].user_tag_id })
+            if (isMounted) {
+              setuserTag1({ id: thisUserTagRel[0].id, user_id: thisUserTagRel[0].user_id, user_tag_id: thisUserTagRel[0].user_tag_id })
+              setuserTag2({ id: thisUserTagRel[1].id, user_id: thisUserTagRel[1].user_id, user_tag_id: thisUserTagRel[1].user_tag_id })
+              setuserTag3({ id: thisUserTagRel[2].id, user_id: thisUserTagRel[2].user_id, user_tag_id: thisUserTagRel[2].user_tag_id })
+            }
           });
 
         axios.get(process.env.REACT_APP_API_ENDPOINT + "/api/usertag")
           .then((res) => {
             const resTag = res.data;
-            setUseruserTagApi(resTag)
+            if (isMounted) {
+              setUseruserTagApi(resTag)
+            }
           });
 
         axios.get(process.env.REACT_APP_API_ENDPOINT + "/api/usersoftware")
           .then((res) => {
             const resSoftware = res.data;
-            setSoftware(resSoftware)
+            if (isMounted) {
+              setSoftware(resSoftware)
+            }
+
+          });
+
+        axios.get(process.env.REACT_APP_API_ENDPOINT + "/api/usersoftwarerel")
+          .then((res) => {
+            const resSoftwareRel = res.data;
+            const filter = resSoftwareRel.filter(x => x.user_software_id !== 0 && x.user_id === user.uid)
+            const filter2 = resSoftwareRel.filter(x => x.user_software_id !== 0 && x.user_id === user.uid)
+
+            if (isMounted) {
+              setSoftwareRel(filter)
+              setSoftwareRelNew(filter2)
+            }
           });
 
         axios.get(process.env.REACT_APP_API_ENDPOINT + "/api/userprojectrel")
           .then((res) => {
             const resProjectRel = res.data;
-            const thisUserProject = resProjectRel.filter(x => x.user_id === user.uid)
+            const thisUserProject = resProjectRel.filter(x => x.user_id === id)
             // console.log(thisUserProject[0].project_id)
 
             axios.get(process.env.REACT_APP_API_ENDPOINT + "/api/project")
@@ -164,16 +194,25 @@ function Profileuser({ currentUser }) {
                 const thisUserProjectData = resProject.filter(x => {
                   return thisUserProject.some(y => x.id === y.project_id)
                 })
-                setUserProjectData(thisUserProjectDataOwner)    // <== Current User project Owner
-                setUserProjectDataAll(thisUserProjectData)    // All join project
-                console.log("Here : " + thisUserProjectData);
-                setIsLoading(true)
+
+                if (isMounted) {
+                  setUserProjectData(thisUserProjectDataOwner)    // <== Current User project Owner
+                  setUserProjectDataAll(thisUserProjectData)    // All join project
+                  setUserProjectFilter(thisUserProjectDataOwner)
+                  setUserProjectFilterAll(thisUserProjectData)
+                  setIsLoading(true)
+                }
+
               });
-            setUserProjectRel(thisUserProject)
+            if (isMounted) {
+              setUserProjectRel(thisUserProject)
+            }
           });
       }
     })
-
+    return () => {
+      isMounted = false;
+    };
   }, [])
 
   // console.log("Here Too: " + userProjectData)
@@ -255,7 +294,7 @@ function Profileuser({ currentUser }) {
               user_tag_id: userTag3.user_tag_id
             })
               .then((res) => {
-                window.location.reload(false);
+                UpdateUserSoftware()
                 console.log(res.data)
               });
           });
@@ -263,20 +302,50 @@ function Profileuser({ currentUser }) {
   }
 
   function UpdateWebsite() {
-    axios.put(process.env.REACT_APP_API_ENDPOINT + "/api/users/" + currentUser.uid, {
-      id: currentUser.uid,
-      email: userData.email,
-      user_activated: userData.user_activated,
-      first_name: userData.first_name,
-      last_name: userData.last_name,
-      user_about: userData.user_about,
-      user_website: updateUserWebsite,
-      user_skill: userData.user_skill,
-      user_province_id: userData.user_province_id,
-      user_image_link: userData.user_image_link,
-      user_blog: updateUserBlog,
-      user_portfolio: updateUserPortfolio
-    })
+    // axios.put(process.env.REACT_APP_API_ENDPOINT + "/api/users/" + currentUser.uid, {
+    //   id: currentUser.uid,
+    //   email: userData.email,
+    //   user_activated: userData.user_activated,
+    //   first_name: userData.first_name,
+    //   last_name: userData.last_name,
+    //   user_about: userData.user_about,
+    //   user_website: updateUserWebsite,
+    //   user_skill: userData.user_skill,
+    //   user_province_id: userData.user_province_id,
+    //   user_image_link: userData.user_image_link,
+    //   user_blog: updateUserBlog,
+    //   user_portfolio: updateUserPortfolio
+    // })
+  }
+
+  function UpdateUserSoftware() {
+
+    const results = softwareRelNew.filter(({ user_software_id: id1 }) => !softwareRel.some(({ user_software_id: id2 }) => id2 === id1));
+    //บรทัดบนไม่ error เมื่อหาค่าไม่เจอ หรือไม่มีค่า
+    // console.log(results);
+
+    if (results.length > 0) {
+      for (let i = 0; i < results.length; i++) {
+        axios.post(process.env.REACT_APP_API_ENDPOINT + `/api/usersoftwarerel`, {
+          user_id: currentUser.uid,
+          user_software_id: results[i].user_software_id
+        })
+      }
+      window.location.reload(false);
+    }
+
+    if (softwareRelDel.length > 0) {
+      const softwareDel = softwareRelDel.filter(x => {                     //เอาแค่ software ที่ user เคยมี
+        return softwareRel.some(y => y.user_software_id === x.software_id)
+      })
+      console.log(softwareDel)
+      if (softwareDel.length > 0) {
+        for (let i = 0; i < softwareDel.length; i++) {
+          axios.delete(process.env.REACT_APP_API_ENDPOINT + "/api/usersoftwarerel/" + softwareDel[i].id)
+        }
+        window.location.reload(false);
+      }
+    }
   }
 
   const props = {
@@ -297,8 +366,14 @@ function Profileuser({ currentUser }) {
     userImage,
     currentUser,
     UpdateWebsite,
-    setUpdateUserWebsite, setUpdateUserBlog, setUpdateUserPortfolio,
-    updateUserWebsite, updateUserBlog, updateUserPortfolio
+    softwareRel,
+    softwareRelNew,
+    softwareRelDel,
+    forceUpdate,
+    UpdateUserSoftware,
+    id,
+    userProjectFilter, setUserProjectFilter,
+    userProjectFilterAll, setUserProjectFilterAll
   }
 
   return (
@@ -338,7 +413,7 @@ function Profileuser({ currentUser }) {
                     </Stylelogo>
                   </Col>
                   <Col sm="auto">
-                    <div
+                    {currentUser.uid !== id ? null : <div
                       className="edit boxmain"
                       style={{
                         cursor: "pointer",
@@ -346,7 +421,7 @@ function Profileuser({ currentUser }) {
                       onClick={() => setModalShow(true)}
                     >
                       <Image className="Edituser" src={Editicon} alt="Editicon" />
-                    </div>
+                    </div>}
                   </Col>
                 </Row>
               </Container>

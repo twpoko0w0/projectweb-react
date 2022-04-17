@@ -68,7 +68,8 @@ font-weight: 700;
 `;
 
 function ModalEditProfile({ modalShow, setModalShow, software, userData, userTagEditProfile, userTagApi,
-  userTag1, userTag2, userTag3, setuserTag1, setuserTag2, setuserTag3, UpdateUserProfile, setUserImage, userImage }) {
+  userTag1, userTag2, userTag3, setuserTag1, setuserTag2, setuserTag3, UpdateUserProfile, setUserImage,
+  userImage, softwareRel, softwareRelNew, softwareRelDel, forceUpdate, currentUser, UpdateUserSoftware }) {
 
   const [checked, setChecked] = useState();
 
@@ -94,29 +95,89 @@ function ModalEditProfile({ modalShow, setModalShow, software, userData, userTag
     )
   })
 
-  function handleChecked(id) {
-    setChecked(!id);
-    console.log(id);
+
+  function handleSoftwareAdd(softwareId) {
+    // console.log(softwareRelNew)
+    const index = softwareRelNew.map(x => x.user_software_id).indexOf(softwareId)
+    if (index === -1) {
+
+      const indexDel = softwareRelDel.map(x => x.software_id).indexOf(softwareId)
+
+      if (indexDel !== -1) {
+        const sofwareRelId = softwareRelDel.find(x => x.software_id === softwareId).id
+        const objAdd = {
+          id: sofwareRelId,
+          user_id: currentUser.uid,
+          user_software_id: softwareId
+        }
+        softwareRelNew.push(objAdd)
+        forceUpdate();
+      } else {
+        let rand = Math.floor(Math.random() * 5)
+        const objAdd = {
+          id: rand,
+          user_id: currentUser.uid,
+          user_software_id: softwareId
+        }
+        softwareRelNew.push(objAdd)
+        forceUpdate();
+      }
+      // console.log("indexDel: " + indexDel)
+
+
+      if (indexDel !== -1) {
+        const remove = indexDel !== 0 ? softwareRelDel.splice(indexDel, 1) : softwareRelDel.shift()
+        // console.log("indexDel: " + indexDel)
+      }
+      // console.log(softwareRelNew)
+      // console.log(softwareRelDel)
+
+    }
+
   }
+
+  function handleSoftwareRemove(softwareId) {
+    const index = softwareRelNew.map(x => x.user_software_id).indexOf(softwareId)  //หาที่อยู่ obj
+
+    const objDel = {
+      id: softwareRelNew[index].id,
+      software_id: softwareId
+    }
+    softwareRelDel.push(objDel)
+
+    const remove = index !== 0 ? softwareRelNew.splice(index, 1) : softwareRelNew.shift()
+    forceUpdate();
+    // console.log(softwareRelDel)
+    // console.log(softwareRelDel.length)
+    // console.log(softwareRelNew)
+    // console.log("softwareRelDel: " + softwareRelDel)
+    // console.log("softwareRelNew: " + softwareRelNew[0].user_software_id)
+    // console.log("index: " + index)
+    // console.log("remove: " + remove)
+    // console.log("objDel: " + objDel.id)
+  }
+
 
   const softwareElement = software.map((x) => {
     if (x.software_image_link !== " ") {
       return (
         <span>
-          <input
-            type="checkbox"
-            value={x.id}
-            onChange={(e) => handleChecked(x.id)}
-          />
+          {softwareRelNew.map(y => y.user_software_id).indexOf(x.id) === -1 ? // ไม่มี:มี
+            <>
+              <button className="Tool-tag mt-2" onClick={() => handleSoftwareAdd(x.id)}>
+                <img width="24" height="24" src={x.software_image_link} alt="gitlab" className="ms-2" />
+                {x.user_software}
+              </button>
+            </>
+            :
+            <>
+              <button className="Tool-tag mt-2 bg-primary text-light" onClick={() => handleSoftwareRemove(x.id)}>
+                <img width="24" height="24" src={x.software_image_link} alt="gitlab" className="ms-2" />
+                {x.user_software}
+              </button>
+            </>
+          }
 
-          <Image
-            className="imguser ms-2 mt-2"
-            width={30}
-            height={30}
-            src={x.software_image_link}
-            alt="Profile"
-            roundedCircle
-          />
         </span>
       );
     }

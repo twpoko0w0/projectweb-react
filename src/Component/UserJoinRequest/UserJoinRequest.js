@@ -5,171 +5,14 @@ import trello from "../Card/icon-img/icons8-trello 1.svg";
 import Email from "../logo/email_black_24dp (1).svg"
 import Facebook from "../logo/Vector.svg"
 import axios from "axios";
+import { NavLink } from 'react-router-dom';
+import Line from "../logo/Line.svg"
+import Popup from "../Popup/Popup";
 
-const StyleTabA = styled.div`
-  .lable-1 {
-    max-width: 356px;
-    max-height: 88px;
-    padding: 16px 28px;
-    margin: auto 0;
-    font-family: "Roboto";
-    font-style: normal;
-    font-weight: 400;
-    font-size: 16px;
-    line-height: 19px;
-    color: #7b7b7b;
-  }
-  .lable-1.nav-link {
-    margin: 0px;
-  }
 
-  .nav-item a {
-    height: 88px;
-  }
-  .form-box {
-    display: inline-box;
-  }
 
-  .Text-data {
-    max-width: 600px;
-  }
-  p {
-    margin: 0px;
-  }
-  span {
-    margin: 0px;
-    padding: 0px;
-  }
-  .edit-btn {
-    color: #0d6efd;
-    margin: 0px;
-    padding: 0px;
-    float: right;
-  }
-  .delete-btn {
-    margin-top: 60px;
-    float: right;
-  }
-  .img-data {
-    width: 219px;
-    height: 123px;
-  }
-
-  .image-box {
-    display: inline;
-    padding-right: 20px;
-  }
-  .close-icon {
-    position: absolute;
-    padding-left: 4rem;
-    top: 265px;
-  }
-  .Box-grid {
-    display: flex;
-    justify-content: space-between;
-  }
-  .img {
-    height: 56px;
-    width: 56px;
-    border-radius: 50%;
-    background-color: #000;
-  }
-  .bordr-style col-xl-5 {
-    padding: 0px 0px 0px 24px;
-  }
-  .imginfo {
-    margin: 0 auto;
-  }
-  .border {
-    max-height: 155px;
-    border: 1px solid #000;
-    padding: 16px;
-  }
-  .Tool-Tag {
-    color: #000;
-    margin-right: 20px;
-    border: #e9e9e9;
-  }
-  .name {
-    font-family: "Roboto";
-    font-style: bold;
-    font-size: 16px;
-    colour: #282828;
-  }
-  .date {
-    font-family: "Roboto";
-    font-size: 13px;
-    opacity: 70%;
-    margin: 4px 0 0 0;
-  }
-  .nameinfo {
-    font-family: "Roboto";
-    font-size: 18px;
-    colour: #4d4d4d;
-  }
-  .lable {
-    font-family: "Roboto";
-    font-size: 13px;
-    colour: #424242;
-  }
-  .port {
-    height: 56px;
-    border: 1px solid #dcdcdc;
-    border-left: 0px;
-    border-right: 0px;
-  }
-  .bor {
-    border: 1px solid #dcdcdc;
-    max-width: 64%;
-  }
-  .owner {
-    border-right: 1px solid #dcdcdc;
-    border-bottom: 1px solid #dcdcdc;
-    background-color: #f9f9f9;
-  }
-  .join {
-    background-color: #f9f9f9;
-    border-bottom: 1px solid #dcdcdc;
-  }
-  .number {
-    font-family: "Roboto";
-    font-size: 24px;
-    color: #3082fe;
-  }
-  .labelowm {
-    font-family: "Roboto";
-    font-size: 13px;
-  }
-  .labeljoin {
-    font-family: "Roboto";
-    font-size: 13px;
-  }
-  .buttonn {
-    height: 40px;
-    width: 90px;
-  }
-  .h4 {
-    color: #424242;
-  }
-  .nav-link {
-    width: 356px;
-  }
-  .nav {
-    width: 356px;
-    height: 440px;
-    overflow: hidden;
-    overflow-y: scroll;
-  }
-  .lable {
-    padding-right: 10px;
-  }
-  img{
-    
-    
-  }
-`;
-function UserJoinRequest({ selectUser, selectUserTagname, selectUserProject, selectUserOwnerProject, id, selectUserSoftware }) {
-
+function UserJoinRequest({ selectUser, selectUserTagname, selectUserProject, selectUserOwnerProject, id, selectUserSoftware, selectUserTagReq }) {
+  const [isPopShow, setIsPopShow] = useState(false)
   useEffect(() => {
     if (!selectUser) {
       return null
@@ -177,15 +20,15 @@ function UserJoinRequest({ selectUser, selectUserTagname, selectUserProject, sel
   }, [])
 
   const tagname = selectUserTagname.map((x, index) => {
-    return <button key={index} className="work ms-2">{x}</button>
+    return <button key={index} className="work-btn ">{x}</button>
   })
-  console.log(selectUserSoftware[0])
+
   const softwareElement = selectUserSoftware.map(x => {
     if (x.user_software !== " " && x !== 0) {
       return <>
         {selectUserSoftware.length === 1 ? "ไม่มี" : <button className="Tool-Tag">
           <img width="24" height="24" src={x.software_image_link ? x.software_image_link : null} alt="trello" />
-          {x.user_software ? x.user_software : null}
+          {/* {x.user_software ? x.user_software : null} */}
         </button>}
       </>
     }
@@ -215,62 +58,148 @@ function UserJoinRequest({ selectUser, selectUserTagname, selectUserProject, sel
       })
   }
 
-  // console.log("Select :" + selectUser.user_id)
-  // console.log("Length :" + selectUserOwnerProject.length)
+  function handleCopy(val) {
+    setIsPopShow(true)
+    navigator.clipboard.writeText(val)
+    setTimeout(function () {
+      setIsPopShow(false)
+    }, 1000);
+  }
 
   return (
     <Tab.Content>
+      {isPopShow ? <Popup /> : null}
+
       <Tab.Pane eventKey={selectUser.user_id}>
         <Row>
-          <Col xl={8} className="bor ms-1">
-            <div className="d-flex justify-content-center">
-              <Image
-                className=" mt-3 "
-                width={50}
-                height={50}
-                style={{ objectFit: "cover" }}
-                src={selectUser.user_image_link}
-                alt="Profile"
-                roundedCircle
-              />
-            </div>
-            <div className="nameinfo text-center fw-bold mt-2">
-              {selectUser.first_name} {selectUser.last_name}
-            </div>
-            <div className="tag d-flex mt-4">
-              <div className="lable">สายงาน:</div>
-              {tagname}
-            </div>
-            <Row className="port mt-4">
-              <div className="col-6 owner text-center">
-                <div className="number fw-bold">{selectUserOwnerProject.length}</div>
-                <div className="labelowm">เจ้าของ</div>
+          <Col style={{ padding: "12px" }}>
+            <div className="box-elem" >
+              <div className="d-flex justify-content-center">
+                <div className="text-box">
+                  <div className="d-flex justify-content-center">
+                    <NavLink to={`/Profile/${selectUser.user_id}`} style={{ color: "black", textDecoration: 'none' }}>
+                      <Image
+                        className=" mt-3 "
+                        width={50}
+                        height={50}
+                        style={{ objectFit: "cover" }}
+                        src={selectUser.user_image_link}
+                        alt="Profile"
+                        roundedCircle
+                      />
+                    </NavLink>
+                  </div>
+                  <p>{selectUser.first_name} {selectUser.last_name}</p>
+                  <h5>{selectUserTagReq}</h5>
+                </div>
               </div>
-              <div className="col-6 join text-center">
-                <div className="number fw-bold">{selectUserProject.length}</div>
-                <div className="labeljoin">เช้าร่วม </div>
-              </div>
-            </Row>
-            <div className="program d-flex mt-4 ">
-              <div className="lable">โปรแกรมที่ใช้:</div>
-              {softwareElement}
-            </div>
+              <div >
+                <div className="Box-Contant-All" >
+                  <div style={{ width: "182px", padding: "2px" }} >
+                    <span onClick={() => handleCopy(selectUser.reqEmail)}>
+                      <div className="" >
+                        <div className="Bg1 e-mail ">
+                          <span class="material-icons" >
+                            email
+                          </span> <br />
+                          {selectUser.reqEmail}
+                        </div>
+                      </div>
+                    </span>
+                  </div>
+                  <div style={{ width: "182px", padding: "2px" }}  >
+                    <span onClick={() => handleCopy(selectUser.facebook)}>
+                      <div className="">
+                        <div className="Bg1 e-mail ">
+                          <span>
+                            <Image src={Facebook} />
+                          </span>
+                          <br />
+                          {selectUser.facebook}
+                        </div>
+                      </div>
+                    </span>
 
-            <div className="button mt-4 mb-5 float-end">
-              <Row>
-                <Button className="buttonn" variant="outline-danger" onClick={() => handleReject()}>
-                  ไม่รับ
-                </Button>{" "}
-                <Button className="buttonn" variant="primary" onClick={() => handleAccept(selectUser.user_id)}>
-                  รับ
-                </Button>{" "}
-              </Row>
+                  </div>
+                  <div style={{ width: "182px", padding: "2px" }}  >
+                    <span onClick={() => handleCopy(selectUser.line)}>
+                      <div  >
+                        <div className="Bg1 e-mail " >
+                          <Image width={24} height={24} src={Line} />
+                          <br />
+                          {selectUser.line}
+                        </div>
+                      </div>
+                    </span>
+                  </div>
+                </div>
+                <div className="text-content">
+                  <h1>“</h1>
+                  {selectUser.interview}
+                  <h1 style={{ textAlign: "end" }}>”</h1>
+                </div>
+              </div>
+
             </div>
           </Col>
-          <Col xl={4} className="border ms-3">
-            <div className="h4 text-center">ช่องทางการติดต่อ</div>
-            <div className="contact mt-4">
-              <div className="e-mail "><img className="email-icon" src={Email} />{selectUser.email}</div>
+          <Col sm="auto" >
+            <div className="box-card">
+              <div style={{ padding: "24px 12px 0px" }}>
+                <div className="d-flex justify-content-center">
+                  <NavLink to={`/Profile/${selectUser.user_id}`} style={{ color: "black", textDecoration: 'none' }}>
+                    <Image
+                      className=" mt-3 "
+                      width={50}
+                      height={50}
+                      style={{ objectFit: "cover" }}
+                      src={selectUser.user_image_link}
+                      alt="Profile"
+                      roundedCircle
+                    />
+                  </NavLink>
+                </div>
+                <div className="nameinfo text-center fw-bold mt-2">
+                  {selectUser.first_name} {selectUser.last_name}
+                </div>
+                <div className="mt-4" >
+                  <div className="lable">สายงาน:</div>
+                  <div className="mt-2">
+                    {tagname}
+                  </div>
+                </div>
+              </div>
+              <div className="d-flex port mt-4">
+                <div className="col-6 owner text-center">
+                  <div className="number fw-bold">{selectUserOwnerProject.length}</div>
+                  <div className="labelowm">เจ้าของ</div>
+                </div>
+                <div className="col-6 join text-center">
+                  <div className="number fw-bold">{selectUserProject.length}</div>
+                  <div className="labeljoin">เช้าร่วม </div>
+                </div>
+              </div>
+              <div style={{ padding: "24px 12px 0px" }}>
+                <div className="program  ">
+                  <div className="lable">โปรแกรมที่ใช้:</div>
+                  <div className="box-tag d-flex  mt-2 mb-2">
+                    {softwareElement}
+                  </div>
+                </div>
+                <div className="box-button mt-5 mb-5 ">
+                  <Button className="buttonn non " variant="outline-danger" onClick={() => handleReject()}>
+                    <span class="material-icons ">
+                      cancel
+                    </span>
+                    ไม่รับ
+                  </Button>{" "}
+                  <Button className="buttonn" variant="primary" onClick={() => handleAccept(selectUser.user_id)}>
+                    <span class="material-icons">
+                      check_circle
+                    </span>
+                    รับ
+                  </Button>{" "}
+                </div>
+              </div>
             </div>
           </Col>
         </Row>
