@@ -7,52 +7,89 @@ import CardRandom from "./Card3data";
 import axios from "axios";
 
 const GridCard = styled.div`
-  display: grid;
-  grid-template-columns: auto auto auto;
-  
-`;
-const StyleCard = styled.div`
-  .card.mos {
+.grd{
+    padding: 72px 0 ;
+  }
+  .butTom{
+    display: flex;
+    justify-content: center;
+    margin: 124px 0 ;
+  }
+  .show-btn{
+    padding: 10px 62px;
+  }
+  .card.project {
     text-decoration: none;
     cursor: pointer;
+    width: 356px ;
+    height: 317px ;
+    border-radius: 8px ;
+    margin-top: 40px ;
   }
-  .card.mos:hover {
+  .card.project:hover {
     box-shadow: 5px 10px 20px 1px rgba(0, 0, 0, 0.253) !important;
   }
-  .card-title1{
-    display: "flex" ;
+  .Img-Card{
+    position: relative;
+    marginTop: 0;
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    border-radius: 8px 8px 0 0 ;
   }
-  .work-box{
-     margin-top: 8rem;
-     padding: 0px  6px; 
-     padding-top: 10px ;
+  .card-title1 {
+    display: "flex";
   }
-`;
-const ButtonStyle = styled.button`
-  @import url("https://fonts.googleapis.com/css2?family=Roboto:wght@100;400;700&display=swap");
+  .box-btnCat{
+    position: absolute;
+    margin-top: 10px;
+    margin-right: 6px;
+    right:0 ;
+  }
+  .box-btnTag{
+    position: absolute;
+    margin-left: 6px;
+    bottom: 38% ;
+  }
 
   button {
     margin: 0px;
-    font-family: "Roboto", sans-serif;
+    font-family: 'Roboto', sans-serif;
     cursor: pointer;
     font-size: 14px;
-    color: #fff;
+    color:#fff;
     border-radius: 4px;
-    position: relative;
-  }
-  .งานอ {
-    background-color: #1ac3cc;
-    border: 1px solid #1ac3cc;
-  }
+   
+}
+.work-btn{
+    background-color: #3082FE;
+    border: 1px solid #3082FE;
+    color: #fff;
+    height: 16px;
+    line-height: 14px;
+    border-radius: 6px;
+    margin: 0px 4px;
+    padding: 0px 2px;
+    font-size: 14px;
+}
+.Cat-btn{
+    color: #000;
+    border-radius: 20px;
+    background-color: #fff;
+    border: 1px solid #fff;
+}
+.lvwork{
+  margin-top: 10px;
+}
 `;
 
-function CardProjectJoin({ userProjectDataAll }) {
+function CardProjectJoin({ userProjectFilterAll }) {
 
     return (
         <>
             {
-                userProjectDataAll.map((elem) => {
-                    const { id, project_name, project_image_link, project_category_name, project_tag_name } = elem;
+                userProjectFilterAll.map((elem) => {
+                    const { id, project_name, project_image_link, project_category_name, project_tag_name, project_seriousness_name } = elem;
                     const tagList = project_tag_name.split(",")
 
                     function TrimTagListName(tag) {
@@ -60,64 +97,55 @@ function CardProjectJoin({ userProjectDataAll }) {
                     }
 
                     return (
-                        <StyleCard key={id}>
+                        <Col sm="auto">
                             <Card
-                                className=" bg-white  border-white shadow  mos"
-                                style={{
-                                    width: "356px",
-                                    height: "317px",
-                                    borderRadius: "10px 10px 8px 8px",
-                                    marginTop: "40px ",
-                                }}
+                                key={id}
+                                className=" bg-white  border-white shadow project "
                                 as={Link}
-                                to={`/ProjectManager/${id}`}
+                                to={`/ProjectDetail/${id}`}
+
                             >
-                                {/* <Link to={`/ProjectDetail/${id}`}></Link> */}
                                 <Card.Img
-                                    style={{
-                                        marginTop: "0",
-                                        width: "100%",
-                                        width: "356px",
-                                        height: "200px",
-                                        objectFit: "cover",
-                                        borderRadius: "8px 8px 0 0",
-                                    }}
+                                    className="Img-Card"
                                     variant="top"
                                     src={project_image_link}
                                     alt={project_name}
                                 />
-                                <Card.ImgOverlay style={{ maxHeight: "200px", padding: "8px" }}>
-                                    <div
-                                        className="card-title1"
-                                    >
-                                        <Row className="grid_2">
-                                            <Col> <button className="C1" style={{ float: "right" }}>{project_category_name}</button></Col>
-                                        </Row>
-                                        <Row
-                                            className="grid_1"
-                                            style={{ paddingTop: "4px" }}
-                                        >
-                                            {
-                                                tagList.length <= 2 ?
-                                                    <Col className="work-box">
-                                                        <button className="work">{TrimTagListName(0)}</button>
-                                                        {tagList.length === 1 ? null : <button className="work">{TrimTagListName(1)}</button>}
-                                                    </Col> :
-                                                    <Col className="work-box" >
-                                                        <button className="work">{TrimTagListName(0)}</button>
-                                                        <button className="work">{TrimTagListName(1)}</button>
-                                                        <button className="work">+ {tagList.length - 2}</button>
-                                                    </Col>}
-                                        </Row>
-
-                                    </div>
-                                </Card.ImgOverlay>
+                                <div className="box-btnCat">
+                                    {" "}
+                                    <button className="Cat-btn" >
+                                        {project_category_name}
+                                    </button>
+                                </div>
+                                <div className="box-btnTag">
+                                    {tagList.length <= 2 ? (
+                                        <div >
+                                            <button className="work-btn">{TrimTagListName(0)}</button>
+                                            {tagList.length === 1 ? null : (
+                                                <button className="work-btn">{TrimTagListName(1)}</button>
+                                            )}
+                                        </div>
+                                    ) : (
+                                        <div >
+                                            <button className="work-btn">{TrimTagListName(0)}</button>
+                                            <button className="work-btn">{TrimTagListName(1)}</button>
+                                            <button className="work-btn">+ {tagList.length - 2}</button>
+                                        </div>
+                                    )}
+                                </div>
                                 <Card.Body>
-                                    <Card.Title style={{ color: "black" }}>{project_name}</Card.Title>
+                                    <Card.Title style={{ color: "black" }}>
+                                        {project_name}
+                                    </Card.Title>
+                                    <button className="lvwork"
+                                        style={project_seriousness_name === "งานอดิเรก" ?
+                                            { backgroundColor: "#1AC3CC", border: "1px solid #1AC3CC" } :
+                                            { backgroundColor: "#FFA62B", border: "1px solid #FFA62B" }
+                                        }
+                                    >{project_seriousness_name}</button>
                                 </Card.Body>
                             </Card>
-
-                        </StyleCard>
+                        </Col>
 
                     );
                 })}
@@ -125,32 +153,28 @@ function CardProjectJoin({ userProjectDataAll }) {
     );
 }
 
-export default function Card3ProjectJoin({ userProjectDataAll }) {
+export default function Card3ProjectJoin({ userProjectFilterAll }) {
     const [show, setShow] = useState(false);
-    const props = { userProjectDataAll }
+    const props = { userProjectFilterAll }
     return (
-        <div className="BG-card">
+        <GridCard className="BG-card">
             <Container fluid="lg" style={{ maxWidth: "1140px", padding: "0" }}>
-                <div className="grd" style={{ padding: " 2rem 0" }}>
-                    <GridCard>
+                <div className="grd" >
+                    <Row>
                         <CardProjectJoin {...props} />
-                    </GridCard>
+                    </Row>
                     {show ? (
-                        <GridCard>
+                        <Row>
                             <CardProjectJoin {...props} />
-                        </GridCard>
+                        </Row>
                     ) : null}
                     <div
                         className="butTom"
-                        style={{
-                            display: "flex",
-                            justifyContent: "center",
-                            marginTop: "124px ",
-                        }}
+
                     >
                         <Button
                             onClick={() => setShow(!show)}
-                            style={{ padding: "10px 62px" }}
+                            className="more-btn"
                         >
                             ดูเพิ่มเติม
                         </Button>
@@ -158,6 +182,6 @@ export default function Card3ProjectJoin({ userProjectDataAll }) {
                 </div>
             </Container>
 
-        </div>
+        </GridCard>
     );
 }

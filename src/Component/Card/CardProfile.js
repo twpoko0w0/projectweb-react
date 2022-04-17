@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Button, Image } from 'react-bootstrap'
 import styled from 'styled-components'
 import Time from '../logo/access_time_filled_black_24dp (1).svg'
@@ -8,6 +8,8 @@ import facebookicon from '../logo/Vector.svg'
 import Logo from './Logo'
 import axios from "axios";
 import { NavLink } from 'react-router-dom';
+import Modaljoin from "../Modal/Modaljoin";
+import ModallCancelJoinRequest from "../Modal/ModallCancelJoinRequest";
 
 const StyleCardPro = styled.div`
 @import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap');
@@ -130,20 +132,56 @@ span {
   }
 `;
 
-function CardProfile({ ownerProfile, projectDetail, currentUser, id, isUserJoin, isUserMember, user }) {
-    console.log(projectDetail.duration)
+const Stylelogo = styled.div`
+.git_item{
+    display: flex;
+    margin-top: 18px;
+    justify-content: space-around;
+}
+a {
+    display: inline-flex;
+    margin: 4px;
+    padding: 4px;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: #F0F0F0;
+}
+a.Progg{
+    text-decoration: none;
+    color: #000;
+    justify-content: center; 
+    float: right;
+}
+`;
 
+function CardProfile({ ownerProfile, projectDetail, currentUser, id, isUserJoin, isUserMember, user, projectSoftwareRel, software, tagRel, projectTag, objectTag, userJoinReq }) {
+
+    const [modalShow, setModalShow] = useState(false);
     const [buttonChange, setButtonChange] = useState(0)
-    function handleJoinRequest() {
-        axios.post(process.env.REACT_APP_API_ENDPOINT + "/api/userprojectjoinreq", {
-            user_id: currentUser.uid,
-            project_id: parseInt(id),
-            date_time: new Date(),
-        })
-            .then(function (response) {
-                setButtonChange(1);
-            })
-    }
+    const [modalCancel, setModalCancel] = useState(false);
+    // const []
+    useEffect(() => {
+
+    }, [buttonChange])
+
+
+    const softwareElement = projectSoftwareRel.map(x => {
+        const softwareName = software.find(y => y.id === x.project_software_id).user_software
+        const softwareImage = software.find(y => y.id === x.project_software_id).software_image_link
+        return (
+            <Image
+                className="ms-2 mb-3 mt-3"
+                width={30}
+                height={30}
+                src={softwareImage}
+                alt="Profile"
+                roundedCircle
+            />
+        )
+    })
+
+    const props = { setModalShow, modalShow, tagRel, projectTag, currentUser, id, setButtonChange, objectTag, modalCancel, setModalCancel, isUserJoin, userJoinReq, }
 
     if (user) {
         return (
@@ -170,7 +208,7 @@ function CardProfile({ ownerProfile, projectDetail, currentUser, id, isUserJoin,
                             <p>  {projectDetail.project_contact}</p>
                         </div>
                     </div>
-                    <Logo />
+                    {softwareElement}
                     {currentUser.uid === ownerProfile.id ?
                         <NavLink to={`/ProjectManager/${id}`} style={{ textDecoration: 'none' }} >
                             <Button className="owner" type="add_icon" variant="success">
@@ -185,22 +223,32 @@ function CardProfile({ ownerProfile, projectDetail, currentUser, id, isUserJoin,
                             <>
                                 {isUserJoin === -1 ?
                                     <>
-                                        {buttonChange === 0 ? <Button className="join-normal" type="add_icon" variant="success" onClick={() => handleJoinRequest()} >
-                                            <span class="material-icons">
-                                                add_circle
-                                            </span>
-                                            เข้าร่วม</Button> : <Button className="join" type="add_icon" variant="warning" >
+                                        {buttonChange === 0 ? <>
+                                            <Button className="join-normal" type="add_icon" variant="success" onClick={() => setModalShow(true)} >
+                                                <span class="material-icons">
+                                                    add_circle
+                                                </span>
+                                                เข้าร่วม</Button>
+                                            <Modaljoin {...props} />
+                                        </>
+                                            : <Button className="join" type="add_icon" variant="warning" >
+                                                <span class="material-icons">
+                                                    check_circle
+                                                </span>
+                                                ขอเข้าร่วมแล้ว</Button>}
+                                    </>
+
+                                    : <>
+                                        <Button className="join" type="add_icon" variant="warning"
+                                            onClick={() => setModalCancel(true)}
+                                        >
                                             <span class="material-icons">
                                                 check_circle
                                             </span>
-                                            ขอเข้าร่วมแล้ว</Button>}
+                                            ขอเข้าร่วมแล้ว</Button>
+                                        <ModallCancelJoinRequest {...props} />
                                     </>
 
-                                    : <Button className="join" type="add_icon" variant="warning" >
-                                        <span class="material-icons">
-                                            check_circle
-                                        </span>
-                                        ขอเข้าร่วมแล้ว</Button>
                                 } </> :
                             <NavLink to={`/ProjectManager/${id}`} style={{ textDecoration: 'none' }} >
                                 <Button className="owner" type="add_icon" variant="success">
@@ -212,7 +260,9 @@ function CardProfile({ ownerProfile, projectDetail, currentUser, id, isUserJoin,
                         } </>
 
                     }
+
                 </div>
+
             </StyleCardPro>
         );
     } else {

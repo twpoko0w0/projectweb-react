@@ -13,7 +13,7 @@ const findCateName = [
   { id: 1, project_category_name: "Art" },
 ]
 
-function FormEditNameAndTag({ projectDetail, updateProjectDetail, setUpdateProjectDetail, isOpen, setIsOpen, defaultValue, Update, buttonShow, setButtonShow, UpdateAll }) {
+function FormEditNameAndTag({ projectDetail, updateProjectDetail, setUpdateProjectDetail, isOpen, setIsOpen, defaultValue, Update, buttonShow, setButtonShow, UpdateAll, currUserRole }) {
   const { id } = useParams();
   const [currName, setCurrName] = useState("")
   const [currCategory, setCurrCategory] = useState(0)
@@ -59,117 +59,214 @@ function FormEditNameAndTag({ projectDetail, updateProjectDetail, setUpdateProje
     setIsOpen("close");
   }
 
-  console.log(updateProjectDetail.project_name)
-
-  return (
-    <>
-      <div className="Box-contant" style={{ padding: "10px" }}>
-        <Row>
-          <Col sm="2"><label className="Text-bold">ชื่อโปรเจค:</label></Col>
-          {isOpen === "name" ? (                    // เงื่อนไขการแสดงผลโดย ถ้า EditNameProject ถูกเรียกใช้ ก็จะแสดง form-box ถ้าไม่แสดงตัวเดิม
-            <>
-              <Col style={{ minHeight: '40px' }}>
-                <Form.Control
-                  type="text"
-                  name="editlablenameProject"
-                  value={currName}
-                  onChange={(e) => setCurrName(e.target.value)}
-                />
-              </Col>
-              <Col sm="auto">
-                <Button type="submit" className='ms-0' onClick={() => handleName(currName)}>
-                  บันทึก
-                </Button>
-                <span
-                  onClick={() => handleCancel("close")}
-                  style={{ color: "#0d6efd", padding: "0px 20px" }}
-                >
-                  ยกเลิก
-                </span>
-              </Col>
-            </>
-          ) : (                                                     //ตัวเดิม              บรรทัดล่างไว้กัน แสดงค่าว่าง เพราะ currname ต้องรอโหลด api
-            <>
-              <Col style={{ minHeight: '40px' }}>
-                <p className="Text-data px-3">{currName === "" ? updateProjectDetail.project_name : currName}</p>
-              </Col>
-              <Col sm="auto">
-                <span
-                  className="edit-btn"
-                  onClick={() => handleEdit("name")}
-                >
-                  แก้ไข
-                </span>
-              </Col>
-            </>
-          )}
-        </Row>
-        <hr />
-      </div>
-      <div className="Box-contant" style={{ padding: "10px" }}>
-        <Row>
-          <Col sm="2"><label className="Text-bold">ประเภท:</label></Col>
-          {isOpen === "category" ? (
-            <>
-              <Col style={{ minHeight: '40px' }}>
-                <Form.Select defaultValue={currCategory === 0 ? updateProjectDetail.project_category_id : currCategory} onChange={e => setCurrCategory(e.target.value)}>
-                  <option value={7}>Craft</option>
-                  <option value={6}>Technology</option>
-                  <option value={5}>Music</option>
-                  <option value={4}>Games</option>
-                  <option value={3}>Film & Video</option>
-                  <option value={2}>Design</option>
-                  <option value={1}>Art</option>
-                </Form.Select>
-              </Col>
-              <Col sm="auto">
-                <Button type="submit" className='bg-primary ms-4' onClick={() => handleCategory(currCategory)}>
-                  บันทึก
-                </Button>
-                <span
-                  onClick={() => handleCancel("close")}
-                  style={{ color: "#0d6efd", padding: "0px 20px" }}
-                >
-                  ยกเลิก
-                </span>
-              </Col>
-            </>
-          ) : (
-            <>
-              <Col style={{ minHeight: '40px' }}>
-                <p
-                  className="Text-data px-3"
-                >
-                  {updateProjectDetail.project_category_id === 0 ? null : currCategory === 0 ? findCateName.find(x => x.id === parseInt(updateProjectDetail.project_category_id)).project_category_name : findCateName.find(x => x.id === parseInt(currCategory)).project_category_name}
-                </p>
-              </Col>
-              <Col sm="auto">
-                <span
-                  className="edit-btn"
-                  onClick={() => handleEdit("category")}
-                >
-                  แก้ไข
-                </span>
-              </Col>
-            </>
-          )}
-        </Row>
-        <hr />
-        {buttonShow !== "" ? updateProjectDetail === defaultValue ? null : <div>
+  if (currUserRole !== 3) {
+    return (
+      <>
+        <div className="Box-contant" style={{ padding: "10px" }}>
           <Row>
-            <Col md={6}>
-              <button className='text-dark' onClick={() => handleReset("close")}>Reset</button>
-            </Col>
-            <Col md={6}>
-              <button className='bg-primary' onClick={UpdateAll}>Confirm</button>
-            </Col>
+            <Col sm="2"><label className="Text-bold">ชื่อโปรเจค:</label></Col>
+            {isOpen === "name" ? (                    // เงื่อนไขการแสดงผลโดย ถ้า EditNameProject ถูกเรียกใช้ ก็จะแสดง form-box ถ้าไม่แสดงตัวเดิม
+              <>
+                <Col style={{ minHeight: '40px' }}>
+                  <Form.Control
+                    type="text"
+                    name="editlablenameProject"
+                    value={currName}
+                    onChange={(e) => setCurrName(e.target.value)}
+                  />
+                </Col>
+                <Col sm="auto">
+                  <Button type="submit" className='ms-0' onClick={() => handleName(currName)}>
+                    บันทึก
+                  </Button>
+                  <span
+                    onClick={() => handleCancel("close")}
+                    style={{ color: "#0d6efd", padding: "0px 20px" }}
+                  >
+                    ยกเลิก
+                  </span>
+                </Col>
+              </>
+            ) : (                                                     //ตัวเดิม              บรรทัดล่างไว้กัน แสดงค่าว่าง เพราะ currname ต้องรอโหลด api
+              <>
+                <Col style={{ minHeight: '40px' }}>
+                  <p className="Text-data px-3">{currName === "" ? updateProjectDetail.project_name : currName}</p>
+                </Col>
+                <Col sm="auto">
+                  <span
+                    className="edit-btn"
+                    onClick={() => handleEdit("name")}
+                  >
+                    แก้ไข
+                  </span>
+                </Col>
+              </>
+            )}
           </Row>
-        </div> : null
-        }
+          <hr />
+        </div>
+        <div className="Box-contant" style={{ padding: "10px" }}>
+          <Row>
+            <Col sm="2"><label className="Text-bold">ประเภท:</label></Col>
+            {isOpen === "category" ? (
+              <>
+                <Col style={{ minHeight: '40px' }}>
+                  <Form.Select defaultValue={currCategory === 0 ? updateProjectDetail.project_category_id : currCategory} onChange={e => setCurrCategory(e.target.value)}>
+                    <option value={7}>Craft</option>
+                    <option value={6}>Technology</option>
+                    <option value={5}>Music</option>
+                    <option value={4}>Games</option>
+                    <option value={3}>Film & Video</option>
+                    <option value={2}>Design</option>
+                    <option value={1}>Art</option>
+                  </Form.Select>
+                </Col>
+                <Col sm="auto">
+                  <Button type="submit" className='bg-primary ms-4' onClick={() => handleCategory(currCategory)}>
+                    บันทึก
+                  </Button>
+                  <span
+                    onClick={() => handleCancel("close")}
+                    style={{ color: "#0d6efd", padding: "0px 20px" }}
+                  >
+                    ยกเลิก
+                  </span>
+                </Col>
+              </>
+            ) : (
+              <>
+                <Col style={{ minHeight: '40px' }}>
+                  <p
+                    className="Text-data px-3"
+                  >
+                    {updateProjectDetail.project_category_id === 0 ? null : currCategory === 0 ? findCateName.find(x => x.id === parseInt(updateProjectDetail.project_category_id)).project_category_name : findCateName.find(x => x.id === parseInt(currCategory)).project_category_name}
+                  </p>
+                </Col>
+                <Col sm="auto">
+                  <span
+                    className="edit-btn"
+                    onClick={() => handleEdit("category")}
+                  >
+                    แก้ไข
+                  </span>
+                </Col>
+              </>
+            )}
+          </Row>
+          <hr />
+          {buttonShow !== "" ? updateProjectDetail === defaultValue ? null : <div>
+            <Row>
+              <Col md={6}>
+                <button className='text-dark' onClick={() => handleReset("close")}>Reset</button>
+              </Col>
+              <Col md={6}>
+                <button className='bg-primary' onClick={UpdateAll}>Confirm</button>
+              </Col>
+            </Row>
+          </div> : null
+          }
 
-      </div>
-    </>
-  )
+        </div>
+      </>
+    )
+  } else {
+    return (
+      <>
+        <div className="Box-contant" style={{ padding: "10px" }}>
+          <Row>
+            <Col sm="2"><label className="Text-bold">ชื่อโปรเจค:</label></Col>
+            {isOpen === "name" ? (                    // เงื่อนไขการแสดงผลโดย ถ้า EditNameProject ถูกเรียกใช้ ก็จะแสดง form-box ถ้าไม่แสดงตัวเดิม
+              <>
+                <Col style={{ minHeight: '40px' }}>
+                  <Form.Control
+                    type="text"
+                    name="editlablenameProject"
+                    value={currName}
+                    onChange={(e) => setCurrName(e.target.value)}
+                  />
+                </Col>
+                <Col sm="auto">
+                  <Button type="submit" className='ms-0' onClick={() => handleName(currName)}>
+                    บันทึก
+                  </Button>
+                  <span
+                    onClick={() => handleCancel("close")}
+                    style={{ color: "#0d6efd", padding: "0px 20px" }}
+                  >
+                    ยกเลิก
+                  </span>
+                </Col>
+              </>
+            ) : (                                                     //ตัวเดิม              บรรทัดล่างไว้กัน แสดงค่าว่าง เพราะ currname ต้องรอโหลด api
+              <>
+                <Col style={{ minHeight: '40px' }}>
+                  <p className="Text-data px-3">{currName === "" ? updateProjectDetail.project_name : currName}</p>
+                </Col>
+
+              </>
+            )}
+          </Row>
+          <hr />
+        </div>
+        <div className="Box-contant" style={{ padding: "10px" }}>
+          <Row>
+            <Col sm="2"><label className="Text-bold">ประเภท:</label></Col>
+            {isOpen === "category" ? (
+              <>
+                <Col style={{ minHeight: '40px' }}>
+                  <Form.Select defaultValue={currCategory === 0 ? updateProjectDetail.project_category_id : currCategory} onChange={e => setCurrCategory(e.target.value)}>
+                    <option value={7}>Craft</option>
+                    <option value={6}>Technology</option>
+                    <option value={5}>Music</option>
+                    <option value={4}>Games</option>
+                    <option value={3}>Film & Video</option>
+                    <option value={2}>Design</option>
+                    <option value={1}>Art</option>
+                  </Form.Select>
+                </Col>
+                <Col sm="auto">
+                  <Button type="submit" className='bg-primary ms-4' onClick={() => handleCategory(currCategory)}>
+                    บันทึก
+                  </Button>
+                  <span
+                    onClick={() => handleCancel("close")}
+                    style={{ color: "#0d6efd", padding: "0px 20px" }}
+                  >
+                    ยกเลิก
+                  </span>
+                </Col>
+              </>
+            ) : (
+              <>
+                <Col style={{ minHeight: '40px' }}>
+                  <p
+                    className="Text-data px-3"
+                  >
+                    {updateProjectDetail.project_category_id === 0 ? null : currCategory === 0 ? findCateName.find(x => x.id === parseInt(updateProjectDetail.project_category_id)).project_category_name : findCateName.find(x => x.id === parseInt(currCategory)).project_category_name}
+                  </p>
+                </Col>
+
+              </>
+            )}
+          </Row>
+          <hr />
+          {buttonShow !== "" ? updateProjectDetail === defaultValue ? null : <div>
+            <Row>
+              <Col md={6}>
+                <button className='text-dark' onClick={() => handleReset("close")}>Reset</button>
+              </Col>
+              <Col md={6}>
+                <button className='bg-primary' onClick={UpdateAll}>Confirm</button>
+              </Col>
+            </Row>
+          </div> : null
+          }
+
+        </div>
+      </>
+    )
+  }
+
 }
 
 export default FormEditNameAndTag

@@ -86,106 +86,186 @@ font-size: 16px;
     height: 100%vh;
     overflow: hidden;
   }
+  .button-mute {
+    background-color: #D4D4D4;
+  }
+  .hint {
+    font-size: 14px;
+  }
 `;
 
-function TabManage({ projectDetail, objectTag, tagRel, projectTag, updateProjectDetail, setUpdateProjectDetail, isOpen, setIsOpen, defaultValue, Update, image, setImage, UpdateAll, buttonShow, setButtonShow, currentUser, DeleteMember }) {
-  const props = { projectDetail, objectTag, tagRel, projectTag, updateProjectDetail, setUpdateProjectDetail, isOpen, setIsOpen, defaultValue, Update, image, setImage, UpdateAll, buttonShow, setButtonShow, currentUser, DeleteMember };
+function TabManage({ projectDetail, objectTag, tagRel, projectTag, updateProjectDetail, setUpdateProjectDetail, isOpen, setIsOpen, defaultValue, Update, image, setImage, UpdateAll, buttonShow, setButtonShow, currentUser, DeleteMember,
+  softwareRel, softwareRelNew, softwareRelDel, software, forceUpdate, user, setSoftwareRelNew, setSoftwareRelDel, id, navigate, currUserRole }) {
+
   const [modalShow, setModalShow] = useState(false);
-  return (
-    <StyleTabA>
-      <Container fluid="lg" style={{ maxWidth: "1140px" }}>
-        <Tab.Container id="left-tabs" defaultActiveKey="1">
-          <Row style={{ paddingTop: "56px" }}>
-            <Col sm={3}>
-              <Nav variant="pills" className="flex-column">
-                {" "}
-                {/*//fix  */}
-                <Nav.Item >
-                  <Nav.Link className="lable-1" eventKey="1">
-                    ชื่อ และประเภท
-                  </Nav.Link>
-                </Nav.Item>
-                <Nav.Item >
-                  <Nav.Link className="lable-1" eventKey="2">
-                    ระดับ
-                  </Nav.Link>
-                </Nav.Item>
-                <Nav.Item >
-                  <Nav.Link className="lable-1" eventKey="3">
-                    ข้อมูล
-                  </Nav.Link>
-                </Nav.Item>
-                <Nav.Item >
-                  <Nav.Link className="lable-1" eventKey="4">
-                    ตำแหน่งที่ต้องการ
-                  </Nav.Link>
-                </Nav.Item>
-                <Nav.Item >
-                  <Nav.Link className="lable-1" eventKey="5">
-                    เชิญคนรู้จัก
-                  </Nav.Link>
-                </Nav.Item>
-                <Nav.Item >
-                  <Nav.Link className="lable-1" eventKey="6">
-                    จัดการโปรเจค
-                  </Nav.Link>
-                </Nav.Item>
-              </Nav>
-            </Col>
-            <Col className="bordr-style" style={{ height: "100vh" }} >
-              <Tab.Content className="box-content ">
-                <Tab.Pane eventKey="1"  >
-                  <FormEditNameAndTag {...props} />
-                </Tab.Pane>
-                <Tab.Pane eventKey="2">
-                  <FormEditTier {...props} />
-                </Tab.Pane>
-                <Tab.Pane eventKey="3" >
-                  <FormEditDataProject {...props} />
-                </Tab.Pane>
-                <Tab.Pane eventKey="4">
-                  <FormEditJobPosition {...props} />
-                </Tab.Pane>
-                <Tab.Pane eventKey="5" >
-                  <FormInvite {...props} />
-                </Tab.Pane>
-                <Tab.Pane eventKey="6">
-                  <div className="form-delete">
-                    <Row>
-                      <Col sm={2}>
-                        {" "}
-                        <label className="Text-bold">ระงับโปรเจค: </label>
-                      </Col>
-                      <Col>
-                        <p>
-                          สมาชิกในทีมไม่มีข้อมูลเกี่ยว กับโปรเจคนี้
-                          แต่คนที่ระงับจะขึ้นใน โปรไฟล์ว่ามีงาน deactivate
-                          ถ้าดูรายเอียดโปรเจคจาก โปรไฟล์
-                          โดยตรงจะเห็นแค่ข้อมูลโดยย่อและสมาชิกจะเห็น แค่คนที่ลบ
-                          นอกนั้นเป็น bot(user22154)
-                          ถ้าเปลี่ยนใจอยากเปิดขั้นต่ำคือ 30 วัน
-                          หลังจากเปิดสมาชิกจะหายหมด
-                        </p>
-                      </Col>
-                    </Row>
-                    <Button
-                      className="delete-btn"
-                      variant="outline-danger"
-                      onClick={() => setModalShow(true)}
-                    >
-                      <img style={{ paddingRight: "10px" }} src={Cancel} />
-                      ระงับโปรเจค
-                    </Button>
-                  </div>
-                </Tab.Pane>
-              </Tab.Content>
-            </Col>
-          </Row>
-        </Tab.Container>
-        <Suppress show={modalShow} onHide={() => setModalShow(false)} />
-      </Container>
-    </StyleTabA>
-  );
+  const props = {
+    projectDetail, objectTag, tagRel, projectTag, updateProjectDetail, setUpdateProjectDetail, isOpen, setIsOpen, defaultValue, Update, image, setImage, UpdateAll, buttonShow, setButtonShow, currentUser, DeleteMember,
+    softwareRel, softwareRelNew, softwareRelDel, software, forceUpdate, user, setSoftwareRelNew, setSoftwareRelDel, id, modalShow,
+    setModalShow, navigate, currUserRole
+  };
+
+  if (currUserRole !== 3) {
+    return (
+      <StyleTabA>
+        <Container fluid="lg" style={{ maxWidth: "1140px" }}>
+          <Tab.Container id="left-tabs" defaultActiveKey="1">
+            <Row style={{ paddingTop: "56px" }}>
+              <Col sm={3}>
+                <Nav variant="pills" className="flex-column">
+                  {" "}
+                  {/*//fix  */}
+                  <Nav.Item >
+                    <Nav.Link className="lable-1" eventKey="1">
+                      ชื่อ และประเภท
+                    </Nav.Link>
+                  </Nav.Item>
+                  <Nav.Item >
+                    <Nav.Link className="lable-1" eventKey="2">
+                      ระดับ
+                    </Nav.Link>
+                  </Nav.Item>
+                  <Nav.Item >
+                    <Nav.Link className="lable-1" eventKey="3">
+                      ข้อมูล
+                    </Nav.Link>
+                  </Nav.Item>
+                  <Nav.Item >
+                    <Nav.Link className="lable-1" eventKey="4">
+                      ตำแหน่งที่ต้องการ
+                    </Nav.Link>
+                  </Nav.Item>
+                  <Nav.Item >
+                    <Nav.Link className="lable-1" eventKey="5">
+                      เชิญคนรู้จัก
+                    </Nav.Link>
+                  </Nav.Item>
+                  <Nav.Item >
+                    <Nav.Link className="lable-1" eventKey="6">
+                      จัดการโปรเจค
+                    </Nav.Link>
+                  </Nav.Item>
+                </Nav>
+              </Col>
+              <Col className="bordr-style" style={{ height: "100vh" }} >
+                <Tab.Content className="box-content ">
+                  <Tab.Pane eventKey="1"  >
+                    <FormEditNameAndTag {...props} />
+                  </Tab.Pane>
+                  <Tab.Pane eventKey="2">
+                    <FormEditTier {...props} />
+                  </Tab.Pane>
+                  <Tab.Pane eventKey="3" >
+                    <FormEditDataProject {...props} />
+                  </Tab.Pane>
+                  <Tab.Pane eventKey="4">
+                    <FormEditJobPosition {...props} />
+                  </Tab.Pane>
+                  <Tab.Pane eventKey="5" >
+                    <FormInvite {...props} />
+                  </Tab.Pane>
+                  <Tab.Pane eventKey="6">
+                    <div className="form-delete">
+                      <Row>
+                        <Col sm={2}>
+                          {" "}
+                          <label className="Text-bold">ระงับโปรเจค: </label>
+                        </Col>
+                        <Col>
+                          <p>
+                            สมาชิกในทีมไม่มีข้อมูลเกี่ยว กับโปรเจคนี้
+                            แต่คนที่ระงับจะขึ้นใน โปรไฟล์ว่ามีงาน deactivate
+                            ถ้าดูรายเอียดโปรเจคจาก โปรไฟล์
+                            โดยตรงจะเห็นแค่ข้อมูลโดยย่อและสมาชิกจะเห็น แค่คนที่ลบ
+                            นอกนั้นเป็น bot(user22154)
+                            ถ้าเปลี่ยนใจอยากเปิดขั้นต่ำคือ 30 วัน
+                            หลังจากเปิดสมาชิกจะหายหมด
+                          </p>
+                        </Col>
+                      </Row>
+                      <Button
+                        className="delete-btn"
+                        variant="outline-danger"
+                        onClick={() => setModalShow(true)}
+                      >
+                        <img style={{ paddingRight: "10px" }} src={Cancel} />
+                        ระงับโปรเจค
+                      </Button>
+                    </div>
+                  </Tab.Pane>
+                </Tab.Content>
+              </Col>
+            </Row>
+          </Tab.Container>
+          <Suppress  {...props} />
+        </Container>
+      </StyleTabA>
+    );
+  } else {
+    return (
+      <StyleTabA>
+        <Container fluid="lg" style={{ maxWidth: "1140px" }}>
+          <Tab.Container id="left-tabs" defaultActiveKey="1">
+            <Row style={{ paddingTop: "56px" }}>
+              <Col sm={3}>
+                <Nav variant="pills" className="flex-column">
+                  {" "}
+                  {/*//fix  */}
+                  <Nav.Item >
+                    <Nav.Link className="lable-1" eventKey="1">
+                      ชื่อ และประเภท
+                    </Nav.Link>
+                  </Nav.Item>
+                  <Nav.Item >
+                    <Nav.Link className="lable-1" eventKey="2">
+                      ระดับ
+                    </Nav.Link>
+                  </Nav.Item>
+                  <Nav.Item >
+                    <Nav.Link className="lable-1" eventKey="3">
+                      ข้อมูล
+                    </Nav.Link>
+                  </Nav.Item>
+                  <Nav.Item >
+                    <Nav.Link className="lable-1" >
+                      ตำแหน่งที่ต้องการ <p className="text-danger hint">(เฉพาะ Owner และ Moderator)</p>
+                    </Nav.Link>
+                  </Nav.Item>
+                  <Nav.Item >
+
+                  </Nav.Item>
+                  <Nav.Item >
+                    <Nav.Link className="lable-1" >
+                      จัดการโปรเจค <p className="text-danger hint">(เฉพาะ Owner และ Moderator)</p>
+                    </Nav.Link>
+                  </Nav.Item>
+                </Nav>
+              </Col>
+              <Col className="bordr-style" style={{ height: "100vh" }} >
+                <Tab.Content className="box-content ">
+                  <Tab.Pane eventKey="1"  >
+                    <FormEditNameAndTag {...props} />
+                  </Tab.Pane>
+                  <Tab.Pane eventKey="2">
+                    <FormEditTier {...props} />
+                  </Tab.Pane>
+                  <Tab.Pane eventKey="3" >
+                    <FormEditDataProject {...props} />
+                  </Tab.Pane>
+
+                  <Tab.Pane eventKey="5" >
+                    <FormInvite {...props} />
+                  </Tab.Pane>
+
+                </Tab.Content>
+              </Col>
+            </Row>
+          </Tab.Container>
+          <Suppress  {...props} />
+        </Container>
+      </StyleTabA>
+    );
+  }
+
 }
 
 export default TabManage;

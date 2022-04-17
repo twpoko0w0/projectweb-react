@@ -12,7 +12,7 @@ a.Text_a {
  }
 `;
 
-export default function NavcatITems({ filrerItems, setItems, items, project }) {
+export default function NavcatITems({ filrerItems, setItems, items, project, handleCategory }) {
   return (
     <TextStyle >
       <div className="animation start-ALL"></div>
@@ -28,7 +28,7 @@ export default function NavcatITems({ filrerItems, setItems, items, project }) {
         style={{ padding: "8px 16px" }}
         className="Text_a"
         eventKey="1"
-        onClick={() => filrerItems('Art')}
+        onClick={() => handleCategory('Art')}
       >
         Art
       </Nav.Link>
@@ -36,7 +36,7 @@ export default function NavcatITems({ filrerItems, setItems, items, project }) {
         style={{ padding: "8px 16px" }}
         className="Text_a"
         eventKey="2"
-        onClick={() => filrerItems('Craft')}
+        onClick={() => handleCategory('Craft')}
       >
         Craft
       </Nav.Link>
@@ -44,7 +44,7 @@ export default function NavcatITems({ filrerItems, setItems, items, project }) {
         style={{ padding: "8px 16px" }}
         className="Text_a"
         eventKey="3"
-        onClick={() => filrerItems('Design')}
+        onClick={() => handleCategory('Design')}
       >
         Design
       </Nav.Link>
@@ -52,7 +52,7 @@ export default function NavcatITems({ filrerItems, setItems, items, project }) {
         style={{ padding: "8px 16px" }}
         className="Text_a"
         eventKey="4"
-        onClick={() => filrerItems('Film & Video')}
+        onClick={() => handleCategory('Film & Video')}
       >
         Film & Video
       </Nav.Link>
@@ -60,7 +60,7 @@ export default function NavcatITems({ filrerItems, setItems, items, project }) {
         style={{ padding: "8px 16px" }}
         className="Text_a"
         eventKey="5"
-        onClick={() => filrerItems('Games')}
+        onClick={() => handleCategory('Games')}
       >
         Game
       </Nav.Link>
@@ -68,7 +68,7 @@ export default function NavcatITems({ filrerItems, setItems, items, project }) {
         style={{ padding: "8px 16px" }}
         className="Text_a"
         eventKey="5"
-        onClick={() => filrerItems('Music')}
+        onClick={() => handleCategory('Music')}
       >
         Music
       </Nav.Link>
@@ -76,7 +76,7 @@ export default function NavcatITems({ filrerItems, setItems, items, project }) {
         style={{ padding: "8px 16px" }}
         className="Text_a"
         eventKey="5"
-        onClick={() => filrerItems('Technology')}
+        onClick={() => handleCategory('Technology')}
       >
         Technology
       </Nav.Link>
@@ -84,7 +84,7 @@ export default function NavcatITems({ filrerItems, setItems, items, project }) {
         style={{ padding: "8px 16px" }}
         className="Text_a"
         eventKey="5"
-        onClick={() => filrerItems('Other')}
+        onClick={() => handleCategory('Other')}
       >
         Other
       </Nav.Link>

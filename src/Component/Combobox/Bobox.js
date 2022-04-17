@@ -2,48 +2,47 @@ import React from "react";
 import { Col, Form, Row } from "react-bootstrap";
 import styled from "styled-components";
 
-const StyleForm = styled.div`
-@import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap');
-font-family: 'Roboto', sans-serif;
-  .form-control.text {
-    position: absolute;
-  }
-`;
+export default function Combobox({ tag, filrerItems1, projectTag, setNameTag, memberCountSelect,
+  setMemberCountSelect, handleFilterMemberCount, setFilterMemberCount, filterMemberCount, handleTagFilter, handleMemberCount, handleTier }) {
 
+  const projectTagElement = projectTag.map((val, index) => {
+    return (
+      <option key={index} value={val.project_tag_name}>{val.project_tag_name}</option>
+    )
+  });
 
-export default function Combobox({tag,filrerItems1,handleSelect}) {
   return (
-    <StyleForm>
-      <Row style={{ margin: "24px 0px" }}>
+    <>
+      <Row style={{ marginTop: "20px" }} >
         <Col>
-        <Form.Label>สายงานที่สนใจ</Form.Label>
-            <Form.Select style={{ maxWidth: "400px" }} onChange={handleSelect}>
-            <option>select menu</option>
-            <option value="1">Front-end</option>
-            <option value="2">UX/UI</option>
-            <option value="3">Back-end</option>
-              </Form.Select>
+          <Form.Label>สายงานที่สนใจ</Form.Label>
+          <Form.Select style={{ maxWidth: "400px" }}
+            onChange={(e) => handleTagFilter(e.target.value)}>
+            <option value="">.....</option>
+            {projectTagElement}
+          </Form.Select>
+
         </Col>
 
         <Col>
           <Form.Label>ระดับโปรเจค</Form.Label>
-          <Form.Select style={{ maxWidth: "400px" }}>
-            <option>select menu</option>
-            <option value="1">ผลงาน</option>
-            <option value="2">สร้างประสบการณ์</option>
+          <Form.Select style={{ maxWidth: "400px" }} onChange={(e) => handleTier(e.target.value)}>
+            <option value="">.....</option>
+            <option value="ผลงาน">ผลงาน</option>
+            <option value="งานอดิเรก">งานอดิเรก</option>
           </Form.Select>
         </Col>
 
         <Col>
           <Form.Label>จำนวนสมาชิก</Form.Label>
-          <Form.Select style={{ maxWidth: "400px" }}>
-            <option>select menu</option>
+          <Form.Select style={{ maxWidth: "400px" }} value={filterMemberCount} onChange={(e) => handleMemberCount(e.target.value)}>
+            <option value="">.....</option>
             <option value="1">1-2</option>
             <option value="2">3-5</option>
             <option value="3">5-10</option>
           </Form.Select>
         </Col>
       </Row>
-    </StyleForm>
+    </>
   );
 }

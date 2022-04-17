@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useReducer } from "react";
-import { Container, Tab, Nav, Image, Row, Col, Button } from "react-bootstrap";
+import { Container, Tab, Nav, Image, Row, Col, Button, Dropdown } from "react-bootstrap";
 import Editicon from "../logo/edit_black_24dp.svg";
 import styledComponents from "styled-components";
 import Webicon from "../logo/language_black_24dp.svg";
@@ -8,6 +8,7 @@ import Workicon from "../logo/work_black_24dp.svg";
 import Card3 from "../Card/CardProjectOwner";
 import Card3ProjectJoin from "../Card/CardProjectJoin";
 import ModalEditWebsite from "../Modal/ModalEditWebsite";
+import { Link, NavLink } from 'react-router-dom';
 import ModalEditAbout from "../Modal/ModalEditAbout";
 
 const StyleBox1 = styledComponents.div`
@@ -83,16 +84,19 @@ background: #F9F9F9;
 `;
 const StyleNav = styledComponents.div`
 
-a {
+.nav{
+  position: relative;
+}
+a.Items1 {
     position: relative;
     height: 67px;
 }
-.nav a:hover{
+.nav a.Items1:hover{
     color: #3082FE;
     border-radius: 6%;
     background: #f9f9f9;
 }
-a:after{
+a.Items1:after{
     content: "";
     position: absolute;
     background: #3082FE;
@@ -102,26 +106,61 @@ a:after{
     bottom: 0px;
     border-radius: 6%;
 }
-a:hover:after{
-    width: 100%;
-    
+a.Items1:hover:after{
+  width: 100%;
 }
+.box-filter{
+position: absolute;
+right: 0  ;
 
+}
+.dropdown-toggle::after{
+display: none;
+}
+.filter {
+width: 96px;
+height: 44px;
+margin: 10px 0 ;
+padding: 10px;
+border-radius: 20px;
+border: 1px solid #dcdcdc;
+}
+.filter_icon {
+font-size: 20px;
+padding: 0px 2px;
+margin-left: 4px;
+float: left;
+}
+span {
+position: relative;
+margin: 0px;
+padding: 0px;
+
+}
 `;
-function TabProfile({ userData, userSkill, userProjectData, userProjectDataAll, currentUser, UpdateWebsite, setUpdateUserWebsite,
-  setUpdateUserBlog, setUpdateUserPortfolio, updateUserWebsite, updateUserBlog, updateUserPortfolio }) {
+function TabProfile({ userData, userSkill, userProjectData, userProjectDataAll, currentUser, UpdateWebsite, softwareRel,
+  softwareRelNew, softwareRelDel, id, userProjectFilter, setUserProjectFilter, userProjectFilterAll, setUserProjectFilterAll }) {
 
   const [modalShow, setModalShow] = useState(false);
+  const [openfilter, setOpenfilter] = useState(false);
   const [modalShowAbout, setModalShowAbout] = useState(false);
+  const [filterTag, setFilterTag] = useState("");
 
   const skillElement = userSkill.map(x => {
     return <button className="Tag-Skills">{x}</button>
   })
 
+  function ApplyFilter(tier) {
+    const filter = userProjectData.filter(x => x.project_seriousness_name === tier)
+    const filterAllJoin = userProjectDataAll.filter(x => x.project_seriousness_name === tier)
+    setUserProjectFilter(filter)
+    setUserProjectFilterAll(filterAllJoin)
+  }
 
   const props = {
     userData, userSkill, userProjectData, modalShow, setModalShow, modalShowAbout,
-    setModalShowAbout, userProjectDataAll, currentUser, UpdateWebsite, setUpdateUserWebsite, setUpdateUserBlog, setUpdateUserPortfolio
+    setModalShowAbout, userProjectDataAll, currentUser, UpdateWebsite, softwareRel,
+    softwareRelNew, softwareRelDel, userProjectFilter, userProjectFilterAll, setUserProjectFilterAll
   }
   return (
     <Tab.Container defaultActiveKey="link-1">
@@ -129,23 +168,43 @@ function TabProfile({ userData, userSkill, userProjectData, userProjectDataAll, 
         <StyleNav>
           <Nav style={{ height: "67px", background: "#fff" }}>
             <Nav.Item >
-              <Nav.Link className="Items1" eventKey="link-1">
+              <Nav.Link className="Items1" eventKey="link-1" onClick={() => setOpenfilter(false)}>
                 เกี่ยวกับ
               </Nav.Link>
             </Nav.Item>
             <Nav.Item>
-              <Nav.Link className="Items2" eventKey="link-2">
+              <Nav.Link className="Items2" eventKey="link-2" onClick={() => setOpenfilter(true)}>
                 {" "}
                 ผลงาน
               </Nav.Link>
             </Nav.Item>
             <Nav.Item>
-              <Nav.Link className="Items3" eventKey="link-3">
+              <Nav.Link className="Items3" eventKey="link-3" onClick={() => setOpenfilter(true)}>
                 {" "}
                 โปรเจคของฉัน
               </Nav.Link>
             </Nav.Item>
             <div className="animation start-home"></div>
+            {openfilter &&
+              <Dropdown
+                className="box-filter"
+              >
+                <Dropdown.Toggle variant="light" className="filter"
+                >
+                  <span className="material-icons-outlined filter_icon">
+                    filter_list
+                  </span> Filter
+                </Dropdown.Toggle>
+                <Dropdown.Menu className="drop-menu" align="end">
+                  <Dropdown.Item onClick={() => {
+                    setUserProjectFilter(userProjectData)
+                    setUserProjectFilterAll(userProjectDataAll)
+                  }}>...</Dropdown.Item>
+                  <Dropdown.Item onClick={() => ApplyFilter("ผลงาน")}>ผลงาน</Dropdown.Item>
+                  <Dropdown.Item onClick={() => ApplyFilter("งานอดิเรก")}>งานอดิเรก</Dropdown.Item>
+                </Dropdown.Menu>
+              </Dropdown>
+            }
           </Nav>
         </StyleNav>
       </Container>
@@ -174,9 +233,10 @@ function TabProfile({ userData, userSkill, userProjectData, userProjectDataAll, 
                         {userData.user_portfolio === "" ? <span className="text-secondary ">กรอกข้อมูลติดต่อ</span> : userData.user_portfolio}
                       </div>
                     </div>
-                    <div className="edit box1" onClick={() => setModalShow(true)}>
+                    {currentUser.uid !== id ? null : <div className="edit box1" onClick={() => setModalShow(true)}>
                       <Image src={Editicon} alt="Editicon" />
-                    </div>
+                    </div>}
+
                     <ModalEditWebsite {...props} />
                   </StyleBox1>
                 </Col>
@@ -193,9 +253,10 @@ function TabProfile({ userData, userSkill, userProjectData, userProjectDataAll, 
                         {userSkill[0] === "" ? <div className="text-secondary">คุณยังไม่ได้กรอกข้อมูลทักษะของคุณ</div> : skillElement}
                       </div>
                     </div>
-                    <div className="edit box2" onClick={() => setModalShowAbout(true)}>
+                    {currentUser.uid !== id ? null : <div className="edit box2" onClick={() => setModalShowAbout(true)}>
                       <Image src={Editicon} alt="Editicon" />
-                    </div>
+                    </div>}
+
                     <ModalEditAbout {...props} />
                   </StyleBox2>
                 </Col>
@@ -222,7 +283,7 @@ function TabProfile({ userData, userSkill, userProjectData, userProjectDataAll, 
             {userProjectData.length === 0 ?
               <div className="content-boxbtn">
                 <h2>คุณยังไม่มีโปรเจค</h2>
-                <Button className="btnds">สร้างโปรเจค</Button>
+                <NavLink to={"/StartProject"} style={{ color: "black", textDecoration: 'none' }}><Button className="btnds">สร้างโปรเจค</Button></NavLink>
               </div>
               :
               <Container fluid="lg" style={{ maxWidth: "1140px" }}>

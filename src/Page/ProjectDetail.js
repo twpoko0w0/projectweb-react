@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Container } from "react-bootstrap";
+import { Button, Container } from "react-bootstrap";
 import Navbar1 from "../Component/Navbar";
 import styled from "styled-components";
 import Tab1 from "../Component/Tab1";
@@ -30,29 +30,15 @@ const StyleDetail = styled.div`
   a {                          
     text-decoration: none;
 }
-`;
-const Button = styled.button`
-  @import url("https://fonts.googleapis.com/css2?family=Roboto:wght@100;400;700&display=swap");
-
-  button {
-    margin: 0px;
-    font-family: "Roboto", sans-serif;
-    cursor: pointer;
-    font-size: 14px;
-    color: #fff;
-    border-radius: 4px;
-    position: relative;
-  }
-  .Lv_c {
-    background-color: #1ac3cc;
-    border: 1px solid #1ac3cc;
-  }
-`;
-const ColorButton = styled.div`
-  .lvworkf {
-    background-color: #ffa62b;
-    border: 1px solid #ffa62b;
-  }
+.lv-work{
+  margin: 0px;
+  font-family: 'Roboto', sans-serif;
+  cursor: pointer;
+  font-size: 14px;
+  color:#fff;
+  border-radius: 4px;
+  float: right;
+}
 `;
 
 function ProjectDetail({ currentUser }) {
@@ -67,9 +53,13 @@ function ProjectDetail({ currentUser }) {
   const [member, setMember] = useState([])
   const [tagRel, setTagRel] = useState([]);
   const [projectTag, setProjectTag] = useState([]);
-  const props = { objectTag, currentUser, ownerProfile, projectDetail, id, isUserJoin, member, tagRel, projectTag, isUserMember, user }
+  const [projectSoftwareRel, setProjectSoftwareRel] = useState([]);
+  const [software, setSoftware] = useState([])
+  const [userJoinReq, setUserJoinReq] = useState(0)
+  const props = { objectTag, currentUser, ownerProfile, projectDetail, id, isUserJoin, member, tagRel, projectTag, isUserMember, user, projectSoftwareRel, software, userJoinReq }
 
   useEffect(() => {
+    let isMounted = true;
     axios.get(process.env.REACT_APP_API_ENDPOINT + "/api/project")
       .then((res) => {
         const resProject = res.data;
@@ -77,13 +67,15 @@ function ProjectDetail({ currentUser }) {
         const tagName = projectDetail.project_tag_name.split(",")
         const tagRole = projectDetail.project_tag_role.split(",")
         const tagQuantity = projectDetail.quantity.split(",")
+        const tagRelId = projectDetail.project_tag_relation_id.split(",")
 
         for (let i = 0; i < tagName.length; i++) {
           const object = {
             key: i,
             project_tag_name: tagName[i],
             project_role: tagRole[i],
-            project_quantity: tagQuantity[i]
+            project_quantity: tagQuantity[i],
+            project_tag_relation_id: tagRelId[i]
           }
           objectTag.push(object);
           // console.log(tagName[i])
@@ -91,14 +83,26 @@ function ProjectDetail({ currentUser }) {
         // console.log(projectDetail.duration)
 
         firebase.auth().onAuthStateChanged(user => {
-          setUser(user)
+          if (isMounted) {
+            setUser(user)
+          }
+
           if (user) {
             axios.get(process.env.REACT_APP_API_ENDPOINT + "/api/userprojectjoinreq")
               .then((res) => {
                 const resJoin = res.data
                 const checkUserJoinReq = resJoin.filter(x => x.project_id === parseInt(id))
                 const findUserJoin = checkUserJoinReq.map(x => x.user_id).indexOf(user.uid);
-                setIsUserJoin(findUserJoin)
+
+                if (findUserJoin !== -1) {
+                  const findUserJoinReqId = checkUserJoinReq.find(x => x.user_id === user.uid).id
+                  setUserJoinReq(findUserJoinReqId)
+                }
+
+                if (isMounted) {
+                  setIsUserJoin(findUserJoin)
+                }
+
               })
 
             axios.get(process.env.REACT_APP_API_ENDPOINT + "/api/userprojectrel")
@@ -108,14 +112,20 @@ function ProjectDetail({ currentUser }) {
 
                 const checkUserMember = resProjectRel.filter(x => x.project_id === parseInt(id))
                 const findUserMember = checkUserMember.map(x => x.user_id).indexOf(user.uid);
-                setIsUserMember(findUserMember)
+                if (isMounted) {
+                  setIsUserMember(findUserMember)
+                }
+
                 // console.log("This user owner: " + thisUserRel[0].user_id)
 
                 axios.get(process.env.REACT_APP_API_ENDPOINT + "/api/users")
                   .then((res) => {
                     const resUser = res.data;
                     const thisUser = resUser.find(x => x.id === thisUserRel[0].user_id)
-                    setOwnerProfile(thisUser);
+                    if (isMounted) {
+                      setOwnerProfile(thisUser);
+                    }
+
 
 
                     const thisMember = resProjectRel.filter(x => x.project_id === parseInt(id))   // filter ครั้งแรก จะจัดเรียงตาม id
@@ -136,7 +146,10 @@ function ProjectDetail({ currentUser }) {
                       }
                       member.push(obj)
                     }
-                    setIsLoading(true)
+                    if (isMounted) {
+                      setIsLoading(true)
+                    }
+
                   });
               });
           } else {
@@ -160,7 +173,10 @@ function ProjectDetail({ currentUser }) {
                   .then((res) => {
                     const resUser = res.data;
                     const thisUser = resUser.find(x => x.id === thisUserRel[0].user_id)
-                    setOwnerProfile(thisUser);
+                    if (isMounted) {
+                      setOwnerProfile(thisUser);
+                    }
+
 
 
                     const thisMember = resProjectRel.filter(x => x.project_id === parseInt(id))   // filter ครั้งแรก จะจัดเรียงตาม id
@@ -181,7 +197,10 @@ function ProjectDetail({ currentUser }) {
                       }
                       member.push(obj)
                     }
-                    setIsLoading(true)
+                    if (isMounted) {
+                      setIsLoading(true)
+                    }
+
                   });
               });
           }
@@ -192,18 +211,47 @@ function ProjectDetail({ currentUser }) {
           .then((res) => {
             const resTagRel = res.data;
             const projectTagRel = resTagRel.filter(x => x.project_id === parseInt(id))
-            setTagRel(projectTagRel)
+            if (isMounted) {
+              setTagRel(projectTagRel)
+            }
+
             // console.log(projectTagRel)
           });
 
         axios.get(process.env.REACT_APP_API_ENDPOINT + "/api/projecttag")
           .then((res) => {
             const projectTag = res.data;
-            setProjectTag(projectTag);
+            if (isMounted) {
+              setProjectTag(projectTag);
+            }
+
           });
 
-        setProjectDetail(projectDetail);
+        axios.get(process.env.REACT_APP_API_ENDPOINT + "/api/projectsoftwarerel")
+          .then((res) => {
+            const softwareRel = res.data;
+            const thisProjectSoftware = softwareRel.filter(x => x.project_id === parseInt(id))
+            if (isMounted) {
+              setProjectSoftwareRel(thisProjectSoftware)
+            }
+
+          });
+
+        axios.get(process.env.REACT_APP_API_ENDPOINT + "/api/usersoftware")
+          .then((res) => {
+            const resSoftware = res.data;
+            if (isMounted) {
+              setSoftware(resSoftware)
+            }
+
+          });
+        if (isMounted) {
+          setProjectDetail(projectDetail);
+        }
       });
+    return () => {
+      isMounted = false;
+    };
 
     // function GetProjectData() {
 
@@ -233,25 +281,28 @@ function ProjectDetail({ currentUser }) {
           <Container style={{ maxWidth: "1140px" }}>
             <StyleDetail>
               <img
-                className="img-fluid sIm"
+                className=" sIm"
                 src={projectDetail.project_image_link}
-                style={{ width: "451px", height: "254px" }}
+                style={{ width: "451px", height: "254px", objectFit: "cover" }}
                 alt="img"
               />
               <div className="Detail ">
-                <a className="text-secondary " >{projectDetail.project_category_name}</a>
-                {/* <a>sada</a> */}
                 <div className="row">
+                  <p className="text-secondary" >{projectDetail.project_category_name}</p>
                   <div className="col-6">
                     <h4>
                       {projectDetail.project_name}
                     </h4>
                   </div>
                   <div className="col-6">
-                    <ColorButton>
-                      <Button className="Lv_c">{projectDetail.project_seriousness_name}</Button>
-                      <NavLink to={`/ProjectManager/${id}`}><button className="bg-primary ms-2">Edit Project(for dev)</button></NavLink>
-                    </ColorButton>{" "}
+
+                    <Button className="lv-work"
+                      style={projectDetail.project_seriousness_name === "งานอดิเรก" ?
+                        { backgroundColor: "#1AC3CC", border: "1px solid #1AC3CC" } :
+                        { backgroundColor: "#FFA62B", border: "1px solid #FFA62B" }
+                      }
+                    >{projectDetail.project_seriousness_name}</Button>
+
                   </div>
                 </div>
 
@@ -266,7 +317,7 @@ function ProjectDetail({ currentUser }) {
       }
 
       {/* <CardProfile/> */}
-    </div>
+    </div >
   )
 }
 

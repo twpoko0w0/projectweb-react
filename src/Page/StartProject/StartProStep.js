@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useReducer } from "react";
-import { Button, Col, Container, Row, Alert } from "react-bootstrap";
+import { Button, Col, Container, Row, Alert, Image } from "react-bootstrap";
 import Navbar1 from "../../Component/Navbar";
 import Footer from "../../Component/Footer";
 import { StartProStep1 } from "./StartProStep1";
@@ -13,11 +13,15 @@ import { storage } from './../../firebase'
 import { Link, useNavigate, Navigate, NavLink } from "react-router-dom"
 import firebase from 'firebase/compat/app';
 import Spinner from "../../Component/LoadingSpinner/Spinner";
+import bar1 from "../../All_Img/Progress bar1.png"
+import bar2 from "../../All_Img/Progress bar2.png"
+import bar3 from "../../All_Img/Progress bar3.png"
+import bar4 from "../../All_Img/Progress bar4.png"
 
 const StyleBG = styled.div`
   background: #f9f9f9;
+  width: 100%;
   height: 100vw;
-  width: auto;
 
   .progressbar {
     width: 400px;
@@ -30,6 +34,31 @@ const StyleBG = styled.div`
     width: 33.3%;
     height: 100%;
     background-color: rgb(98, 0, 255);
+  }
+  .header{
+    display: flex;
+    justify-content: center;
+    margin-bottom: 50px;
+  }
+  .Next-btn{
+    display: flex;
+    align-self: center;
+    float: right;
+  }
+  span{
+    margin: 0px;
+    padding: 0px;
+    
+  }
+  .back-btn{
+    display: flex;
+    align-self: center;
+  }
+  .back-icon{
+    padding-right: 10px;
+  }
+  .flow-icon{
+    padding-left: 10px;
   }
 `;
 
@@ -59,10 +88,11 @@ export function StartProStep({ currentUser }) {
   const [image, setImage] = useState(null);
   const [url, setUrl] = useState("");
   const navigate = useNavigate();
-
-  console.log("Curr projectId: " + getProjectId)
-  console.log("new projectId: " + newProjectId)
-
+  const [software, setSoftware] = useState([])
+  const [selectSoftware, setSelectSoftware] = useState([])
+  const [message, setMessage] = useState("")
+  const [doneMessage, setDoneMessage] = useState("")
+  const [test, setTest] = useState("")
 
   useEffect(() => {
     if (!currentUser) {
@@ -94,6 +124,17 @@ export function StartProStep({ currentUser }) {
               setIsLoading(true)
             });
         });
+      axios.get(process.env.REACT_APP_API_ENDPOINT + "/api/usersoftware")
+        .then((res) => {
+          const resSoftware = res.data;
+          setSoftware(resSoftware)
+        });
+      // axios.get(process.env.REACT_APP_API_ENDPOINT + "/api/projectsoftwarerel")
+      //   .then((res) => {
+      //     const software = res.data;
+      //     setProjectTag(projectTag);
+      //     setIsLoading(true)
+      //   });
     }
   }, [])
 
@@ -104,7 +145,7 @@ export function StartProStep({ currentUser }) {
     "ขั้นตอนสุดท้ายแล้ว !",
   ];
 
-  const props = { formdata, setFormdata, projectTag, tagList, newProjectId, forceUpdate, setImage, url }
+  const props = { formdata, setFormdata, projectTag, tagList, newProjectId, forceUpdate, setImage, url, software, selectSoftware, currentUser, message, image, test, setTest }
   const PageDisplay = () => {
     if (page === 0) {
       return (
@@ -158,7 +199,18 @@ export function StartProStep({ currentUser }) {
     }
   };
 
+  function handleIncreasePage() {
+
+    if (!image && page === 2) {
+      setMessage("กรุณาอัพโหลดรูปภาพ")
+    } else {
+      setPage((currPage) => currPage + 1);
+      setMessage("");
+    }
+  }
+
   const PostFromList = (event) => {
+    setDoneMessage("กำลังสร้างโปรเจค กรุณารอสักครู่...")
     event.preventDefault();
     const uploadTask = storage.ref(`images/${image.name}`).put(image);
     uploadTask.on(
@@ -187,7 +239,14 @@ export function StartProStep({ currentUser }) {
                         })
                     )
                   });
-                  axios.post(process.env.REACT_APP_API_ENDPOINT + `/api/userprojectrel`, { user_id: currentUser.uid, project_id: newProjectId, project_role_id: 1, project_tag_rel_id: 191 })
+
+                  if (selectSoftware.length > 0) {
+                    for (let i = 0; i < selectSoftware.length; i++) {
+                      axios.post(process.env.REACT_APP_API_ENDPOINT + "/api/projectsoftwarerel", { project_id: currProject.id, project_software_id: selectSoftware[i].project_software_id })
+                    }
+                  }
+
+                  axios.post(process.env.REACT_APP_API_ENDPOINT + `/api/userprojectrel`, { user_id: currentUser.uid, project_id: currProject.id, project_role_id: 1, project_tag_rel_id: 191 })
                     .then(function (response) {
                       navigate({ pathname: '/' })
                     })
@@ -201,63 +260,92 @@ export function StartProStep({ currentUser }) {
     )
   }
 
+
   return (
     <>
-      {isLoading === false ? <Spinner />
-        :
-        <div>
+      {isLoading === false ? (
+        <Spinner />
+      ) : (
+        <StyleBG >
           <Navbar1 />
-          <StyleBG>
-            <div className="form BG">
-              <Container fluid="lg">
-                <Row className="Style" style={{ alignContent: "center" }}>
-                  <Col>
-                    <div className="header">
-                      <h1>{FormTitles[page]} </h1>
-                      <div className="progressbar ">
-                        <div
-                          style={{
-                            width:
-                              page === 0
-                                ? "20%"
-                                : page === 1
-                                  ? "40%"
-                                  : page === 2
-                                    ? "60%"
-                                    : page === 3
-                                      ? "80%"
-                                      : "100%",
-                          }}
-                        ></div>
-                      </div>
+          <div className="BG" >
+            <Container fluid="lg "  >
+              <Row className="Style" style={{ alignContent: "center" }}>
+                <Col >
+                  <div className="header" >
+                    <div className="content-box-header">
+                      <p style={{ textAlign: "center", color: "#0d6efd" }}>{FormTitles[page]} </p>
+                      {page === 0 ? (
+                        <Image src={bar1} alt="bar1" />
+                      ) : page === 1 ? (
+                        <Image src={bar2} alt="bar2" />
+                      ) : page === 2 ? (
+                        <Image src={bar3} alt="bar3" />
+                      ) : (
+                        <Image src={bar4} alt="bar4" />
+                      )}
                     </div>
-                    <div className="body">{PageDisplay()}</div>
-                    <div className="footer mt-5">
-                      <Row>
-                        <Col xs={12} md={11}>
-                          {page === 0 ? <div></div> : <Button disabled={page === 0} onClick={() => setPage((currPage) => currPage - 1)}>
-                            Prev
-                          </Button>}
+                  </div>
+                  <div className="body" >
+                    {PageDisplay()}
+                    <Row className="mt-5" style={{ padding: "0 14rem" }}>
+                      {(message === "กรุณาอัพโหลดรูปภาพ" && page === 2) || (page === 0 && message === "กรุณากรอกชื่อโปรเจค") ? <>{message && <Alert variant="danger">{message}</Alert>}</> : null}
+                      {doneMessage && <Alert variant="success">{doneMessage}</Alert>}
+                      <Col className="d-flex" >
+                        {page === 0 ? (
+                          <div></div>
+                        ) : (
+                          <span
+                            className="back-btn"
+                            disabled={page === 0}
+                            onClick={() =>
+                              setPage((currPage) => currPage - 1)
+                            }
+                          >
+                            <span class="material-icons-outlined back-icon">
+                              arrow_back
+                            </span>
+                            ย้อนกลับ
+                          </span>
+                        )}
+                      </Col>
+                      <Col  >
 
-                        </Col>
-                        <Col xs={12} md={1} className="px-4">
-                          {page === 3 ? <Button onClick={PostFromList}>
-                            Post
-                          </Button> : <Button disabled={page === FormTitles.length - 1} onClick={() => setPage((currPage) => currPage + 1)}>
-                            Next
-                          </Button>}
-                        </Col>
-                      </Row>
-                    </div>
-                  </Col>
-                </Row>
-              </Container>
-            </div>
-          </StyleBG>
-          <Footer />
-        </div>
-      }
+                        {page === 3 ? (
+                          <Button style={{ float: "right", display: "flex" }} onClick={PostFromList}>
+                            เสร็จสิ้น
+                            <span class="material-icons " style={{ paddingLeft: "10px" }}>
+                              check_circle
+                            </span>
+                          </Button>
+                        ) : (
 
+                          <Button
+                            disabled={page === FormTitles.length - 1}
+                            variant="outline-primary"
+                            className="Next-btn"
+                            onClick={() => formdata.projectName === "" ? setMessage("กรุณากรอกชื่อโปรเจค") : handleIncreasePage()}
+                          >
+                            {page === 2 ? "ถัดไป: หาตำแหน่งที่ต้องการ" : "ถัดไป: เลือกระดับของโปรเจค"}
+                            <span class="material-icons-outlined flow-icon">
+                              arrow_forward
+                            </span>
+                          </Button>
+                        )}
+                      </Col>
+                    </Row>
+
+                  </div>
+
+                </Col>
+              </Row>
+            </Container>
+          </div>
+          <div style={{ marginTop: "24rem" }}>
+            <Footer />
+          </div>
+        </StyleBG>
+      )}
     </>
   );
 }

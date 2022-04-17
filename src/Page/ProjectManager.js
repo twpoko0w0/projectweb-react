@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState, useRef, useReducer } from "react";
 import { Button, Container, Tab, Nav } from "react-bootstrap";
 import Navbar from "../Component/Navbar";
 import TabManage from "../Component/Tab/TabManage";
@@ -33,8 +33,16 @@ const StyleTabMan = styled.div`
    background-color: #ffff;
  }
 `;
-function ProjectManager({ currentUser }) {
-  const { id } = useParams(null);
+
+const findCardRole = [
+  { id: 1, role: "Owner" },
+  { id: 2, role: "Moderator" },
+  { id: 3, role: "Member" },
+]
+
+function ProjectManager() {
+  const { id } = useParams();
+  const [_, forceUpdate] = useReducer((x) => x + 1, 0);
   const [user, setUser] = useState([])
   const [isLoading, setIsLoading] = useState(false)
   const [projectDetail, setProjectDetail] = useState([]); // for main object project static data
@@ -75,11 +83,15 @@ function ProjectManager({ currentUser }) {
   const [userReq, setUserReq] = useState([])   //User req ทั้งหมด เพื่อเอาไปหาว่า user มี project กี่อัน
   const [userData, setUserData] = useState([])
   const [member, setMember] = useState([])
-  const componentMounted = useRef(true); // (3) component is mounted
+  const [softwareRel, setSoftwareRel] = useState([])
+  const [softwareRelNew, setSoftwareRelNew] = useState([])
+  const [softwareRelDel, setSoftwareRelDel] = useState([])
+  const [software, setSoftware] = useState([])
+  const [value, setValue] = useState('checking value...');
+  const [currUserRole, setCurrUserRole] = useState(0)
 
   useEffect(() => {
-
-
+    let isMounted = true;
     firebase.auth().onAuthStateChanged(user => {
       if (!user) {
         return navigate({ pathname: '/' })
@@ -107,7 +119,10 @@ function ProjectManager({ currentUser }) {
               objectTag.push(object);
               // console.log(tagName[i])
             }
-            setProjectDetail(projectDetail);
+            if (isMounted) {
+              setProjectDetail(projectDetail);
+            }
+
             let updateObj = {
               project_name: projectDetail.project_name,
               project_activated: projectDetail.project_activated,
@@ -120,23 +135,31 @@ function ProjectManager({ currentUser }) {
               project_duration_id: projectDetail.project_duration_id,
               project_image_link: projectDetail.project_image_link
             }
+            if (isMounted) {
+              SetState(updateObj)  //Function
 
-            SetState(updateObj)  //Function
-            setIsLoading(true)
+            }
+
           });
 
         axios.get(process.env.REACT_APP_API_ENDPOINT + "/api/projecttagrel")
           .then((res) => {
             const resTagRel = res.data;
             const projectTagRel = resTagRel.filter(x => x.project_id === parseInt(id))
-            setTagRel(projectTagRel)
+            if (isMounted) {
+              setTagRel(projectTagRel)
+            }
+
             // console.log(projectTagRel)
           });
 
         axios.get(process.env.REACT_APP_API_ENDPOINT + "/api/projecttag")
           .then((res) => {
             const projectTag = res.data;
-            setProjectTag(projectTag);
+            if (isMounted) {
+              setProjectTag(projectTag);
+            }
+
           });
 
         axios.get(process.env.REACT_APP_API_ENDPOINT + "/api/userprojectjoinreq")
@@ -149,7 +172,10 @@ function ProjectManager({ currentUser }) {
             axios.get(process.env.REACT_APP_API_ENDPOINT + "/api/users")         //     สำหรับหน้า user join request
               .then((res) => {
                 const userData = res.data;
-                setUserData(userData)
+                if (isMounted) {
+                  setUserData(userData)
+                }
+
                 const userDataJoinReq = userData.filter(x => {    // Output sort โดย alphabet
                   return joinReq.some(y => x.id === y.user_id)
                 });
@@ -166,6 +192,11 @@ function ProjectManager({ currentUser }) {
                     email: userDataJoinReq[i].email,
                     software_image_link: userDataJoinReq[i].software_image_link,
                     user_software: userDataJoinReq[i].user_software,
+                    project_tag_rel_id: joinReq[i].project_tag_rel_id,
+                    interview: joinReq[i].interview,
+                    facebook: joinReq[i].facebook,
+                    reqEmail: joinReq[i].email,
+                    line: joinReq[i].line
                   }
                   newUserJoinObj.push(newObj)
                   // console.log(newObj)
@@ -174,16 +205,27 @@ function ProjectManager({ currentUser }) {
                   .then((res) => {
                     const resProjectRel = res.data;
 
-                    const thisMember = resProjectRel.filter(x => x.project_id === parseInt(id))   // filter ครั้งแรก จะจัดเรียงตาม id
+                    const thisMember = resProjectRel.filter(x => x.project_id === parseInt(id))
+                    try {
+                      const currUserRole = thisMember.find(x => x.user_id === user.uid).project_role_id
+                      if (isMounted) {
+                        setCurrUserRole(currUserRole)
+                      }
+                    } catch {
+                      navigate({ pathname: '/' })
+                    }
+
+                    // filter ครั้งแรก จะจัดเรียงตาม id
                     thisMember.sort((a, b) => a.user_id.localeCompare(b.user_id, undefined, { sensitivity: 'base' })) // sort ใหม่ ให้จัดเรียงตาม alphabet เพราะ some method จะจัดเรียงใหม่่ให้เป็น alphabet
                     const memberData = userData.filter(x => {
                       return thisMember.some(y => x.id === y.user_id)
                     })
+
                     // console.log("here: " + thisMember[0].project_role_id)
 
                     for (let i = 0; i < thisMember.length; i++) {                        // obj สำหรับหน้า member
                       let obj = {
-                        id: thisMember[i].id,
+                        id: thisMember[i].id,    // id user project rel
                         user_id: thisMember[i].user_id,
                         first_name: memberData[i].first_name,
                         last_name: memberData[i].last_name,
@@ -194,26 +236,52 @@ function ProjectManager({ currentUser }) {
                       // console.log("here: " + member[0].first_name)
                       member.push(obj)
                     }
-                    // ลอ หลัง loop เสร็จเอา member มา indexOf เช็คกับ currUser 
+                    // ลอ หลัง loop เสร็จเอา member มา indexOf เช็คกับ currUser
                     // setMember(memberData)
-                    setUserReq(resProjectRel)
-                  });
+                    if (isMounted) {
+                      setUserReq(resProjectRel)
+                      setIsLoading(true)
+                    }
 
-                setJoinReq(userDataJoinReq)
+                  });
+                if (isMounted) {
+                  setJoinReq(userDataJoinReq)
+                }
+
+
               });
           });
+        axios.get(process.env.REACT_APP_API_ENDPOINT + "/api/projectsoftwarerel")
+          .then((res) => {
+            const softwareRel = res.data;
+            const thisProjectSoftware = softwareRel.filter(x => x.project_id === parseInt(id))
+            const thisProjectSoftware2 = softwareRel.filter(x => x.project_id === parseInt(id))
+            if (isMounted) {
+              setSoftwareRel(thisProjectSoftware)
+              setSoftwareRelNew(thisProjectSoftware2)
+            }
+
+          });
+
+        axios.get(process.env.REACT_APP_API_ENDPOINT + "/api/usersoftware")
+          .then((res) => {
+            const resSoftware = res.data;
+            if (isMounted) {
+              setSoftware(resSoftware)
+            }
+          });
       }
-
     })
-
-
-
     return () => {
-      componentMounted.current = false;
-    }
+      isMounted = false;
+    };
   }, [])
 
   // console.log("Test obj: " + testObj[0].user_id)
+
+  function fetchValue() {
+
+  }
 
   function SetState(obj) {
     setUpdateProjectDetail(obj);
@@ -258,12 +326,45 @@ function ProjectManager({ currentUser }) {
     })
       .then((res) => {
         console.log(res.data)
-        window.location.reload(false);
+        UpdateUserSoftware()
+        // window.location.reload(false);
       })
       .catch((err) => {
         console.log(err);
       })
   };
+
+  function UpdateUserSoftware() {
+
+    const results = softwareRelNew.filter(({ project_software_id: id1 }) => !softwareRel.some(({ project_software_id: id2 }) => id2 === id1));
+    //บรทัดบนไม่ error เมื่อหาค่าไม่เจอ หรือไม่มีค่า
+    // console.log(results);
+    if (results.length === 0) {
+      window.location.reload(false);
+    }
+    if (results.length > 0) {
+      for (let i = 0; i < results.length; i++) {
+        axios.post(process.env.REACT_APP_API_ENDPOINT + "/api/projectsoftwarerel", {
+          project_id: parseInt(id),
+          project_software_id: results[i].project_software_id
+        })
+      }
+      window.location.reload(false);
+    }
+
+    if (softwareRelDel.length > 0) {
+      const softwareDel = softwareRelDel.filter(x => {                     //เอาแค่ software ที่ user เคยมี
+        return softwareRel.some(y => y.project_software_id === x.software_id)
+      })
+      console.log(softwareDel)
+      if (softwareDel.length > 0) {
+        for (let i = 0; i < softwareDel.length; i++) {
+          axios.delete(process.env.REACT_APP_API_ENDPOINT + "/api/projectsoftwarerel/" + softwareDel[i].id)
+        }
+        window.location.reload(false);
+      }
+    }
+  }
 
   function DeleteMember(id) {
     axios.delete(process.env.REACT_APP_API_ENDPOINT + "/api/userprojectrel/" + id)
@@ -298,76 +399,134 @@ function ProjectManager({ currentUser }) {
     userData,
     member,
     id,
-    currentUser,
-    DeleteMember
+    DeleteMember,
+    softwareRel, softwareRelNew, softwareRelDel,
+    software,
+    forceUpdate,
+    user,
+    setSoftwareRelNew, setSoftwareRelDel, navigate, currUserRole
   }
 
-  return (
-    <StyleBg>
-      {isLoading === false ? <Spinner />
-        :
-        <div>
-          <Navbar />
-          <StyleTabMan>
-            <Link to={`/ProjectDetail/${projectDetail.id}`}></Link>
-            <Container fluid="lg" style={{ maxWidth: "1140px" }}>
-              <header>
-                <h2>{projectDetail.project_name}</h2>
-                <Button className="Tag-status px" variant="primary" inline>{projectDetail.status_name}</Button>
-              </header>
-            </Container>
-            <section>
-              <Tab.Container style={{ height: "48px" }} defaultActiveKey="link-1">
-                <Container fluid="lg">
-                  <Nav style={{ height: "72px" }}>
-                    <Nav.Item>
-                      <Nav.Link className="Items1" eventKey="link-1" >
-                        รายละเอียด
-                      </Nav.Link>
-                    </Nav.Item>
-                    <Nav.Item>
-                      <Nav.Link className="Items2" eventKey="link-2">
-                        {" "}
-                        สมาชิก
-                      </Nav.Link>
-                    </Nav.Item>
-                    <Nav.Item>
-                      <Nav.Link className="Items3" eventKey="link-3">
-                        {" "}
-                        คำขอเข้าร่วม
-                      </Nav.Link>
-                    </Nav.Item>
-                    <Nav.Item>
-                      <Nav.Link className="Items4" eventKey="link-4" >
-                        {" "}
-                        คำถาม
-                      </Nav.Link>
-                    </Nav.Item>
-                  </Nav>
-                </Container>
-                {/* <hr className="MM" /> */}
-                <Tab.Content className="TabGrid">
-                  <Tab.Pane eventKey="link-1">
-                    <TabManage {...props} />
-                  </Tab.Pane>
-                  <Tab.Pane eventKey="link-2">
-                    <CardMember {...props} />
-                  </Tab.Pane>
-                  <Tab.Pane eventKey="link-3">
-                    <ElemResume {...props} />
-                  </Tab.Pane>
-                  <Tab.Pane eventKey="link-4">
-                    <AccordionQuestion />
-                  </Tab.Pane>
-                </Tab.Content>
-              </Tab.Container>
-            </section>
-            <div className="footer"></div>
-          </StyleTabMan>
-        </div>}
+  console.log("currUserRole: " + currUserRole)
 
-    </StyleBg>
-  );
+  if (currUserRole !== 3) {
+    return (
+      <StyleBg>
+        {isLoading === false ? <Spinner />
+          :
+          <div>
+            <Navbar />
+            <StyleTabMan>
+              <Link to={`/ProjectDetail/${projectDetail.id}`}></Link>
+              <Container fluid="lg" style={{ maxWidth: "1140px" }}>
+                <header>
+                  <h2>{projectDetail.project_name}</h2>
+                  <Button className="Tag-status px" variant="primary" inline>{projectDetail.status_name}</Button>
+                </header>
+              </Container>
+              <section>
+                <Tab.Container style={{ height: "48px" }} defaultActiveKey="link-1">
+                  <Container fluid="lg">
+                    <Nav style={{ height: "72px" }}>
+                      <Nav.Item>
+                        <Nav.Link className="Items1" eventKey="link-1" >
+                          รายละเอียด
+                        </Nav.Link>
+                      </Nav.Item>
+                      <Nav.Item>
+                        <Nav.Link className="Items2" eventKey="link-2">
+                          {" "}
+                          สมาชิก
+                        </Nav.Link>
+                      </Nav.Item>
+                      <Nav.Item>
+                        <Nav.Link className="Items3" eventKey="link-3">
+                          {" "}
+                          คำขอเข้าร่วม
+                        </Nav.Link>
+                      </Nav.Item>
+                      <Nav.Item>
+                        <Nav.Link className="Items4" eventKey="link-4" >
+                          {" "}
+                          คำถาม
+                        </Nav.Link>
+                      </Nav.Item>
+                    </Nav>
+                  </Container>
+                  {/* <hr className="MM" /> */}
+                  <Tab.Content className="TabGrid">
+                    <Tab.Pane eventKey="link-1">
+                      <TabManage {...props} />
+                    </Tab.Pane>
+                    <Tab.Pane eventKey="link-2">
+                      <CardMember {...props} />
+                    </Tab.Pane>
+                    <Tab.Pane eventKey="link-3">
+                      <ElemResume {...props} />
+                    </Tab.Pane>
+                    <Tab.Pane eventKey="link-4">
+                      <AccordionQuestion />
+                    </Tab.Pane>
+                  </Tab.Content>
+                </Tab.Container>
+              </section>
+              <div className="footer"></div>
+            </StyleTabMan>
+          </div>}
+
+      </StyleBg>
+    );
+  } else {
+    return (
+      <StyleBg>
+        {isLoading === false ? <Spinner />
+          :
+          <div>
+            <Navbar />
+            <StyleTabMan>
+              <Link to={`/ProjectDetail/${projectDetail.id}`}></Link>
+              <Container fluid="lg" style={{ maxWidth: "1140px" }}>
+                <header>
+                  <h2>{projectDetail.project_name}</h2>
+                  <Button className="Tag-status px" variant="primary" inline>{projectDetail.status_name}</Button>
+                </header>
+              </Container>
+              <section>
+                <Tab.Container style={{ height: "48px" }} defaultActiveKey="link-1">
+                  <Container fluid="lg">
+                    <Nav style={{ height: "72px" }}>
+                      <Nav.Item>
+                        <Nav.Link className="Items1" eventKey="link-1" >
+                          รายละเอียด
+                        </Nav.Link>
+                      </Nav.Item>
+                      <Nav.Item>
+                        <Nav.Link className="Items2" eventKey="link-2">
+                          {" "}
+                          สมาชิก
+                        </Nav.Link>
+                      </Nav.Item>
+                    </Nav>
+                  </Container>
+                  {/* <hr className="MM" /> */}
+                  <Tab.Content className="TabGrid">
+                    <Tab.Pane eventKey="link-1">
+                      <TabManage {...props} />
+                    </Tab.Pane>
+                    <Tab.Pane eventKey="link-2">
+                      <CardMember {...props} />
+                    </Tab.Pane>
+                  </Tab.Content>
+                </Tab.Container>
+              </section>
+              <div className="footer"></div>
+            </StyleTabMan>
+          </div>}
+      </StyleBg>
+    );
+  }
+
+
 }
 
 export default ProjectManager;
