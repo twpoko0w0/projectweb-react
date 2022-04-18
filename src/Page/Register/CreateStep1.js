@@ -3,6 +3,11 @@ import { Form, Row, Col, Container, Button, Alert } from 'react-bootstrap';
 import styled from 'styled-components';
 import firebase from 'firebase/compat/app';
 import { Link, useNavigate } from "react-router-dom"
+import axios from "axios";
+import { auth } from "../../firebase";
+import { getAuth, signInWithPopup, FacebookAuthProvider } from "firebase/auth";
+import LogoApp from '../../Component/logo/Frame.svg'
+import Image from '../../All_Img/Untitled-2 1.svg'
 
 
 const BodyStyle = styled.div`
@@ -92,6 +97,7 @@ span{
 }
 
 
+
 `;
 
 export default function CreateStep2() {
@@ -128,7 +134,7 @@ export default function CreateStep2() {
       const user = await firebase.auth().createUserWithEmailAndPassword(emailRef.current.value, 123456)
         .then((res) => {
           res.user.sendEmailVerification({
-            url: process.env.EMAIL_CONFIRM_URL + "/signup/step3",
+            url: "https://experiencehub-161090-final.win/signup/step3",
           });
           // return createUser({ email, uid: res.user.uid, name });
         })
@@ -141,6 +147,124 @@ export default function CreateStep2() {
       setError("สร้างบัญชีล้มเหลว")
     }
     setLoading(false)
+  }
+
+  function GoogleAuth() {
+    const provider = new firebase.auth.GoogleAuthProvider();
+    auth.signInWithPopup(provider);
+
+    firebase.auth().onAuthStateChanged(user => {
+      if (user) {
+        // console.log(user.uid)
+        // console.log(user.displayName)
+        // console.log(user.photoURL)
+        axios.get(process.env.REACT_APP_API_ENDPOINT + "/api/users")         //     สำหรับหน้า user join request
+          .then((res) => {
+            const userData = res.data;
+            const thisUser = userData.filter(x => x.id === user.uid)
+            const Username = user.displayName.split(" ")
+            if (thisUser.length === 0) {
+              axios.post(process.env.REACT_APP_API_ENDPOINT + "/api/users", {
+                id: user.uid,
+                email: user.email,
+                user_activated: 1,
+                first_name: Username[0],
+                last_name: Username[1],
+                user_about: "",
+                user_website: "",
+                user_skill: "",
+                user_province_id: 1,
+                user_image_link: user.photoURL,
+                user_blog: "",
+                user_portfolio: ""
+              }).then(() => {
+                axios.post(process.env.REACT_APP_API_ENDPOINT + "/api/usertagrel", { user_id: user.uid, user_tag_id: 47 })
+                  .then(() => {
+                    axios.post(process.env.REACT_APP_API_ENDPOINT + "/api/usertagrel", { user_id: user.uid, user_tag_id: 47 })
+                      .then(() => {
+                        axios.post(process.env.REACT_APP_API_ENDPOINT + "/api/usertagrel", { user_id: user.uid, user_tag_id: 47 })
+                          .then(() => {
+                            axios.post(process.env.REACT_APP_API_ENDPOINT + "/api/usersoftwarerel", { user_id: user.uid, user_software_id: 0 })
+                              .then(function (response) {
+                                navigate({ pathname: '/' })
+                              })
+                          })
+                      })
+                  })
+                // navigate({ pathname: '/' })
+              })
+            } else {
+              navigate({ pathname: '/' })
+            }
+            console.log(Username)
+          });
+      }
+    })
+  }
+
+  function FacebookAuth() {
+    const provider = new FacebookAuthProvider();
+    const auth = getAuth();
+    signInWithPopup(auth, provider)
+      .then((result) => {
+        const user = result.user;
+        const credential = FacebookAuthProvider.credentialFromResult(result);
+        const accessToken = credential.accessToken;
+      })
+      .catch((error) => {
+        // Handle Errors here.
+        const errorCode = error.code;
+        const errorMessage = error.message;
+        // The email of the user's account used.
+        const email = error.email;
+        // The AuthCredential type that was used.
+        const credential = FacebookAuthProvider.credentialFromError(error);
+
+      });
+    firebase.auth().onAuthStateChanged(user => {
+      if (user) {
+        axios.get(process.env.REACT_APP_API_ENDPOINT + "/api/users")         //     สำหรับหน้า user join request
+          .then((res) => {
+            const userData = res.data;
+            const thisUser = userData.filter(x => x.id === user.uid)
+            const Username = user.displayName.split(" ")
+            if (thisUser.length === 0) {
+              axios.post(process.env.REACT_APP_API_ENDPOINT + "/api/users", {
+                id: user.uid,
+                email: user.email,
+                user_activated: 1,
+                first_name: Username[0],
+                last_name: Username[1],
+                user_about: "",
+                user_website: "",
+                user_skill: "",
+                user_province_id: 1,
+                user_image_link: user.photoURL,
+                user_blog: "",
+                user_portfolio: ""
+              }).then(() => {
+                axios.post(process.env.REACT_APP_API_ENDPOINT + "/api/usertagrel", { user_id: user.uid, user_tag_id: 47 })
+                  .then(() => {
+                    axios.post(process.env.REACT_APP_API_ENDPOINT + "/api/usertagrel", { user_id: user.uid, user_tag_id: 47 })
+                      .then(() => {
+                        axios.post(process.env.REACT_APP_API_ENDPOINT + "/api/usertagrel", { user_id: user.uid, user_tag_id: 47 })
+                          .then(() => {
+                            axios.post(process.env.REACT_APP_API_ENDPOINT + "/api/usersoftwarerel", { user_id: user.uid, user_software_id: 0 })
+                              .then(function (response) {
+                                navigate({ pathname: '/' })
+                              })
+                          })
+                      })
+                  })
+                // navigate({ pathname: '/' })
+              })
+            } else {
+              navigate({ pathname: '/' })
+            }
+            console.log(Username)
+          });
+      }
+    })
   }
 
 
@@ -175,13 +299,13 @@ export default function CreateStep2() {
                     </Stylelol>
 
                     <StyleBtnLogingoogle>
-                      <Button className="logingoogle" href="#" variant="primary" >
+                      <Button className="logingoogle" href="#" variant="primary" onClick={() => GoogleAuth()}>
                         เข้าสู่ระบบด้วย Google
                       </Button>
                     </StyleBtnLogingoogle>
 
                     <StyleBtnLoginfacebook>
-                      <Button className="loginfacebook" href="#" variant="primary" >
+                      <Button className="loginfacebook" href="#" variant="primary" onClick={() => FacebookAuth()}>
                         เข้าสู่ระบบด้วย Facebook
                       </Button>
                     </StyleBtnLoginfacebook>
@@ -190,7 +314,18 @@ export default function CreateStep2() {
                 </div>
               </Col>
               <Col lg={6} >
-                <h1 className="text-end mg5" >Logo</h1>
+                <div className="ms-4">
+                  <div className="ms-5">
+                    <div className="ms-5">
+                      <div className="ms-5">
+                        <div className="d-flex justify-content-center Logo">
+                          <div className="ms-5"><img className="logo-app ms-5" src={LogoApp} /></div>
+                        </div>
+                        <div className="ms-5"><img className="img-app ms-5" src={Image} /></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
               </Col>
             </Row>
           </Style>
