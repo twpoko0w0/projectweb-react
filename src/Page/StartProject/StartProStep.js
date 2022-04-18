@@ -95,6 +95,7 @@ export function StartProStep({ currentUser }) {
   const [test, setTest] = useState("")
 
   useEffect(() => {
+    let isMounted = true;
     if (!currentUser) {
       return navigate({ pathname: '/Login' })
     }
@@ -102,32 +103,41 @@ export function StartProStep({ currentUser }) {
       axios.get(process.env.REACT_APP_API_ENDPOINT + "/api/project")
         .then((res) => {
           const resProject = res.data;
-          setGetProjectId(resProject[0].id)
-          setFormdata({
-            projectName: "",
-            projectCategoryId: 6,
-            projectSeriousnessId: 1,
-            projectStatusId: 1,
-            projectDetail: "",
-            projectBriefDetail: "",
-            projectContact: "",
-            projectImageLink: "",
-            projectDurationId: 1,
-            projectTagId: 47,
-            projectRole: "",
-            projectPositionQuantity: 1
-          })
+          if (isMounted) {
+            setGetProjectId(resProject[0].id)
+            setFormdata({
+              projectName: "",
+              projectCategoryId: 6,
+              projectSeriousnessId: 1,
+              projectStatusId: 1,
+              projectDetail: "",
+              projectBriefDetail: "",
+              projectContact: "",
+              projectImageLink: "",
+              projectDurationId: 1,
+              projectTagId: 47,
+              projectRole: "",
+              projectPositionQuantity: 1
+            })
+          }
+
           axios.get(process.env.REACT_APP_API_ENDPOINT + "/api/projecttag")
             .then((res) => {
               const projectTag = res.data;
-              setProjectTag(projectTag);
-              setIsLoading(true)
+              if (isMounted) {
+                setProjectTag(projectTag);
+                setIsLoading(true)
+              }
+
             });
         });
       axios.get(process.env.REACT_APP_API_ENDPOINT + "/api/usersoftware")
         .then((res) => {
           const resSoftware = res.data;
-          setSoftware(resSoftware)
+          if (isMounted) {
+            setSoftware(resSoftware)
+          }
+
         });
       // axios.get(process.env.REACT_APP_API_ENDPOINT + "/api/projectsoftwarerel")
       //   .then((res) => {
@@ -210,57 +220,63 @@ export function StartProStep({ currentUser }) {
   }
 
   const PostFromList = (event) => {
-    setDoneMessage("กำลังสร้างโปรเจค กรุณารอสักครู่...")
-    event.preventDefault();
-    const uploadTask = storage.ref(`images/${image.name}`).put(image);
-    uploadTask.on(
-      "state_changed",
-      snapshot => { },
-      error => {
-        console.log(error);
-      },
-      () => {
-        storage
-          .ref("images")
-          .child(image.name)
-          .getDownloadURL()
-          .then(url => {
-            setUrl(url);
-            console.log(url);
-            setTimeout(function () {
-              axios.post(process.env.REACT_APP_API_ENDPOINT + `/api/project`, { project_name: formdata.projectName, project_activated: 1, project_status_id: formdata.projectStatusId, project_category_id: formdata.projectCategoryId, project_seriousness_id: formdata.projectSeriousnessId, project_detail: formdata.projectDetail, project_create_date: new Date(), project_brief_detail: formdata.projectBriefDetail, project_contact: formdata.projectContact, project_image_link: url, project_duration_id: formdata.projectDurationId })
-                .then((res) => {
-                  const currProject = res.data
-                  tagList.map((val) => {
-                    return (
-                      axios.post(process.env.REACT_APP_API_ENDPOINT + `/api/projecttagrel`, { project_id: currProject.id, project_tag_id: val.projectTagId, project_tag_role: val.projectRole, project_position_quantity_id: val.projectPositionQuantity })
-                        .then(function (response) {
-                          setIsPost(true);
-                        })
-                    )
-                  });
+    if (tagList.length > 0) {
+      setDoneMessage("กำลังสร้างโปรเจค กรุณารอสักครู่...")
+      event.preventDefault();
+      const uploadTask = storage.ref(`images/${image.name}`).put(image);
+      uploadTask.on(
+        "state_changed",
+        snapshot => { },
+        error => {
+          console.log(error);
+        },
+        () => {
+          storage
+            .ref("images")
+            .child(image.name)
+            .getDownloadURL()
+            .then(url => {
+              setUrl(url);
+              console.log(url);
+              setTimeout(function () {
 
-                  if (selectSoftware.length > 0) {
-                    for (let i = 0; i < selectSoftware.length; i++) {
-                      axios.post(process.env.REACT_APP_API_ENDPOINT + "/api/projectsoftwarerel", { project_id: currProject.id, project_software_id: selectSoftware[i].project_software_id })
+                axios.post(process.env.REACT_APP_API_ENDPOINT + `/api/project`, { project_name: formdata.projectName, project_activated: 1, project_status_id: formdata.projectStatusId, project_category_id: formdata.projectCategoryId, project_seriousness_id: formdata.projectSeriousnessId, project_detail: formdata.projectDetail, project_create_date: new Date(), project_brief_detail: formdata.projectBriefDetail, project_contact: formdata.projectContact, project_image_link: url, project_duration_id: formdata.projectDurationId })
+                  .then((res) => {
+                    const currProject = res.data
+                    tagList.map((val) => {
+                      return (
+                        axios.post(process.env.REACT_APP_API_ENDPOINT + `/api/projecttagrel`, { project_id: currProject.id, project_tag_id: val.projectTagId, project_tag_role: val.projectRole, project_position_quantity_id: val.projectPositionQuantity })
+                          .then(function (response) {
+                            setIsPost(true);
+                          })
+                      )
+                    });
+
+                    if (selectSoftware.length > 0) {
+                      for (let i = 0; i < selectSoftware.length; i++) {
+                        axios.post(process.env.REACT_APP_API_ENDPOINT + "/api/projectsoftwarerel", { project_id: currProject.id, project_software_id: selectSoftware[i].project_software_id })
+                      }
                     }
-                  }
 
-                  axios.post(process.env.REACT_APP_API_ENDPOINT + `/api/userprojectrel`, { user_id: currentUser.uid, project_id: currProject.id, project_role_id: 1, project_tag_rel_id: 191 })
-                    .then(function (response) {
-                      navigate({ pathname: '/' })
-                    })
-                })
-                .catch(function (error) {
-                  console.error(error.response.data);
-                });
-            }, 1000);
-          });
-      },
-    )
+                    axios.post(process.env.REACT_APP_API_ENDPOINT + `/api/userprojectrel`, { user_id: currentUser.uid, project_id: currProject.id, project_role_id: 1, project_tag_rel_id: 191 })
+                      .then(function (response) {
+                        navigate({ pathname: '/' })
+                      })
+                  })
+                  .catch(function (error) {
+                    console.error(error.response.data);
+                  });
+              }, 1000);
+            });
+        },
+      )
+    } else {
+      setDoneMessage("กรุณาเพิ่มแท็กลงลิสต์")
+    }
+
   }
 
-
+  console.log("Tag" + tagList.length)
   return (
     <>
       {isLoading === false ? (
@@ -290,7 +306,9 @@ export function StartProStep({ currentUser }) {
                     {PageDisplay()}
                     <Row className="mt-5" style={{ padding: "0 14rem" }}>
                       {(message === "กรุณาอัพโหลดรูปภาพ" && page === 2) || (page === 0 && message === "กรุณากรอกชื่อโปรเจค") ? <>{message && <Alert variant="danger">{message}</Alert>}</> : null}
-                      {doneMessage && <Alert variant="success">{doneMessage}</Alert>}
+
+                      {doneMessage === "กรุณาเพิ่มแท็กลงลิสต์" ? <>{doneMessage && <Alert variant="danger">{doneMessage}</Alert>}</> : <>{doneMessage && <Alert variant="success">{doneMessage}</Alert>}</>}
+
                       <Col className="d-flex" >
                         {page === 0 ? (
                           <div></div>

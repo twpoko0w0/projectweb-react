@@ -239,23 +239,20 @@ export default function Navbar1() {
                                             roundedCircle
                                         />
                                         <Dropdown.Menu style={{ width: "80px" }}>
-                                            <Dropdown.Item eventKey="1">
-                                                <NavLink
-                                                    to={`/Profile/${userData.id}`}
-                                                    style={{ color: "black", textDecoration: "none" }}
-                                                >
-                                                    Profile
-                                                </NavLink>
+                                            <Dropdown.Item eventKey="1" as={NavLink}
+                                                to={`/Profile/${userData.id}`}
+                                                style={{ color: "black", textDecoration: "none" }}>
+                                                Profile
                                             </Dropdown.Item>
-                                            <Dropdown.Item eventKey="1">
-                                                <NavLink
-                                                    to={`/Profilesetting/${userData.id}`}
-                                                    style={{ color: "black", textDecoration: "none" }}
-                                                >
-                                                    Setting
-                                                </NavLink>
+                                            <Dropdown.Item eventKey="1" as={NavLink}
+                                                to={`/Profilesetting/${userData.id}`}
+                                                style={{ color: "black", textDecoration: "none" }}
+                                            >
+
+                                                Setting
+
                                             </Dropdown.Item>
-                                            <Dropdown.Item eventKey="4" onClick={() => Logout()}>
+                                            <Dropdown.Item eventKey="4" onClick={() => Logout()} >
                                                 Logout
                                             </Dropdown.Item>
                                         </Dropdown.Menu>

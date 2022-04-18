@@ -99,6 +99,7 @@ function Profileuser() {
   const [softwareRelNew, setSoftwareRelNew] = useState([])
   const [softwareRelDel, setSoftwareRelDel] = useState([])
   const [currentUser, setCurrentUser] = useState([])
+  const [message, setMessage] = useState("")
 
   useEffect(() => {
     let isMounted = true;
@@ -236,6 +237,7 @@ function Profileuser() {
   })
 
   function UpdateUserProfile() {
+    setMessage("กำลังโหลด")
     if (!userImage) {
       UpdateUserData(userData.user_image_link);
       UpdateUserTag();
@@ -323,7 +325,9 @@ function Profileuser() {
     const results = softwareRelNew.filter(({ user_software_id: id1 }) => !softwareRel.some(({ user_software_id: id2 }) => id2 === id1));
     //บรทัดบนไม่ error เมื่อหาค่าไม่เจอ หรือไม่มีค่า
     // console.log(results);
-
+    if (results.length === 0) {
+      window.location.reload(false);
+    }
     if (results.length > 0) {
       for (let i = 0; i < results.length; i++) {
         axios.post(process.env.REACT_APP_API_ENDPOINT + `/api/usersoftwarerel`, {
@@ -373,7 +377,8 @@ function Profileuser() {
     UpdateUserSoftware,
     id,
     userProjectFilter, setUserProjectFilter,
-    userProjectFilterAll, setUserProjectFilterAll
+    userProjectFilterAll, setUserProjectFilterAll,
+    message
   }
 
   return (

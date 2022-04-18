@@ -134,7 +134,7 @@ export default function CreateStep2() {
       const user = await firebase.auth().createUserWithEmailAndPassword(emailRef.current.value, 123456)
         .then((res) => {
           res.user.sendEmailVerification({
-            url: "https://experiencehub-161090-final.win/signup/step3",
+            url: process.env.REACT_APP_EMAIL_CONFIRM_URL + "/signup/step3",
           });
           // return createUser({ email, uid: res.user.uid, name });
         })

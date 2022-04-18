@@ -92,6 +92,9 @@ font-size: 16px;
   .hint {
     font-size: 14px;
   }
+  .nav-item {
+      cursor: pointer;
+  }
 `;
 
 function TabManage({ projectDetail, objectTag, tagRel, projectTag, updateProjectDetail, setUpdateProjectDetail, isOpen, setIsOpen, defaultValue, Update, image, setImage, UpdateAll, buttonShow, setButtonShow, currentUser, DeleteMember,

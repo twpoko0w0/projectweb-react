@@ -6,16 +6,20 @@ import Image from "../All_Img/Untitled-2 1.svg";
 import Google from "../Component/logo/facebookLogin.svg";
 import FacebookLogin from "../Component/logo/Google.svg";
 import firebase from "firebase/compat/app";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, NavLink } from "react-router-dom";
 import axios from "axios";
 import { auth } from "../firebase";
 import { getAuth, signInWithPopup, FacebookAuthProvider } from "firebase/auth";
 
 const BodyStyle = styled.div`
-  form.StyleForm {
+*{
+  padding: 0 px;
+  margin: 0px;
+}
+  .StyleForm {
     display: flex;
     justify-content: center;
-    height: 100%;
+    height: 100vh;
   }
   .Box-content {
     width: 352px;
@@ -32,6 +36,8 @@ const BodyStyle = styled.div`
   .box-checkbox {
     display: flex;
     justify-content: space-between;
+    
+    align-items: center;
   }
   .Textpassword {
     margin: 0px;
@@ -101,11 +107,12 @@ const BodyStyle = styled.div`
   }
   .box-img {
     position: relative;
+    height: 100%;
     padding: 0px;
     background: rgba(48, 130, 254, 0.1);
   }
   .Logo {
-    margin-top: 74px;
+    padding-top: 74px;
   }
   img.img-app {
     position: absolute;
@@ -118,8 +125,13 @@ const BodyStyle = styled.div`
     margin-top: 2px;
     padding-right: 20px;
   }
-`;
 
+  .form-check .form-check-input{
+    margin-top: 5px;
+    margin-right: 10px;
+    margin-left: 0px;
+  }
+`;
 function LoginV2() {
   const emailRef = useRef();
   const passwordRef = useRef();
@@ -173,21 +185,21 @@ function LoginV2() {
                       axios
                         .post(
                           process.env.REACT_APP_API_ENDPOINT +
-                            "/api/usertagrel",
+                          "/api/usertagrel",
                           { user_id: user.uid, user_tag_id: 47 }
                         )
                         .then(() => {
                           axios
                             .post(
                               process.env.REACT_APP_API_ENDPOINT +
-                                "/api/usertagrel",
+                              "/api/usertagrel",
                               { user_id: user.uid, user_tag_id: 47 }
                             )
                             .then(() => {
                               axios
                                 .post(
                                   process.env.REACT_APP_API_ENDPOINT +
-                                    "/api/usersoftwarerel",
+                                  "/api/usersoftwarerel",
                                   { user_id: user.uid, user_software_id: 0 }
                                 )
                                 .then(function (response) {
@@ -260,21 +272,21 @@ function LoginV2() {
                       axios
                         .post(
                           process.env.REACT_APP_API_ENDPOINT +
-                            "/api/usertagrel",
+                          "/api/usertagrel",
                           { user_id: user.uid, user_tag_id: 47 }
                         )
                         .then(() => {
                           axios
                             .post(
                               process.env.REACT_APP_API_ENDPOINT +
-                                "/api/usertagrel",
+                              "/api/usertagrel",
                               { user_id: user.uid, user_tag_id: 47 }
                             )
                             .then(() => {
                               axios
                                 .post(
                                   process.env.REACT_APP_API_ENDPOINT +
-                                    "/api/usersoftwarerel",
+                                  "/api/usersoftwarerel",
                                   { user_id: user.uid, user_software_id: 0 }
                                 )
                                 .then(function (response) {
@@ -313,25 +325,27 @@ function LoginV2() {
   return (
     <>
       <BodyStyle>
-        <Row style={{ height: "100vh" }}>
-          <Col lg={8} style={{ padding: "0px" }}>
-            <Form className="StyleForm">
-              <div className="Box-content">
+        <Row>
+          <Col sm={8} >
+            <div className="StyleForm">
+              <Form className="Box-content">
                 <h1>เข้าสู่ระบบ</h1>
-                <Form.Label className="text_lable">อีเมล</Form.Label>
-                <Form.Control type="email" placeholder="" ref={emailRef} />
-                <Form.Label style={{ paddingTop: "2rem" }}>รหัสผ่าน</Form.Label>
-                <Form.Control
-                  type="password"
-                  placeholder=""
-                  ref={passwordRef}
-                />
-                <div className="box-checkbox" style={{ padding: "10px 4px" }}>
-                  <Form.Check
-                    type="checkbox"
-                    id="default-checkbox"
-                    label="จดจำ"
+                <Form.Group>
+                  <Form.Label className="text_lable">อีเมล</Form.Label>
+                  <Form.Control type="email" placeholder="" ref={emailRef} />
+                </Form.Group>
+                <Form.Group>
+                  <Form.Label style={{ paddingTop: "2rem" }}>รหัสผ่าน</Form.Label>
+                  <Form.Control
+                    type="password"
+                    placeholder=""
+                    ref={passwordRef}
                   />
+                </Form.Group>
+                <div className="box-checkbox" style={{ padding: "10px 4px" }}>
+                  <Form.Group className="align-self-center" >
+                    <Form.Check type="checkbox" label="จดจำ" style={{ padding: "0" }} />
+                  </Form.Group>
                   <Link to="/Forgotpassword" className="Textpassword">
                     ลืมรหัสผ่าน?
                   </Link>
@@ -367,17 +381,25 @@ function LoginV2() {
                 </Button>
                 <div className="Text-Create">
                   <p>
-                    ยังไม่ได้เป็นสมาชิก ?<span>สร้างบัญชี</span>
+                    ยังไม่ได้เป็นสมาชิก ?
+                    <NavLink
+                      to={`/Signup`}
+                      style={{ color: "black", textDecoration: "none" }}
+                    >
+                      <span>สร้างบัญชี</span>
+                    </NavLink>
                   </p>
                 </div>
-              </div>
-            </Form>
-          </Col>
-          <Col lg={4} className="box-img">
-            <div className="d-flex justify-content-center Logo">
-              <img className="logo-app" src={LogoApp} />
+              </Form>
             </div>
-            <img className="img-app" src={Image} />
+          </Col>
+          <Col style={{ padding: "0" }}>
+            <div className="box-img">
+              <div className="d-flex justify-content-center Logo">
+                <img className="logo-app" src={LogoApp} />
+              </div>
+              <img className="img-app" src={Image} />
+            </div>
           </Col>
         </Row>
       </BodyStyle>

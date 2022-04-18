@@ -38,6 +38,9 @@ height: 100vh;
     padding: 0px;
     padding-right: 10px;
   }
+  .nav-item {
+        cursor: pointer;
+  }
   .nav-item a {
     height: 72px;
     margin: 0px;
@@ -50,6 +53,7 @@ height: 100vh;
   }
   .Items-1 {
     display: flex;
+  
   }
   .Items-1 img {
     padding-right: 12px;
@@ -102,10 +106,11 @@ function Tab1({ objectTag, currentUser, ownerProfile, projectDetail, id, isUserJ
                     <Tab.Container style={{ height: "72px" }} defaultActiveKey="link-2" >
                         <Nav style={{ height: "72px" }} >
                             <Nav.Item
+                                className="Items-1"
                                 onClick={() => isUserMember === -1 ? setUndoModalShow(true) : null}
                             >
                                 <Nav.Link
-                                    className="Items-1"
+
                                     eventKey="link-1"
                                     style={
                                         currentUser.uid === ownerProfile.id
@@ -138,11 +143,11 @@ function Tab1({ objectTag, currentUser, ownerProfile, projectDetail, id, isUserJ
                                     รายละเอียด
                                 </Nav.Link>
                             </Nav.Item>
-                            <Nav.Item  >
-                                <Nav.Link className="Items-2" eventKey="link-2"> ตำแหน่งที่ต้องการ</Nav.Link>
+                            <Nav.Item className="Items-1" >
+                                <Nav.Link eventKey="link-2"> ตำแหน่งที่ต้องการ</Nav.Link>
                             </Nav.Item>
-                            <Nav.Item  >
-                                <Nav.Link className="Items-3" eventKey="link-3"> คำถามที่พบบ่อย</Nav.Link>
+                            <Nav.Item className="Items-1"  >
+                                <Nav.Link eventKey="link-3"> คำถามที่พบบ่อย</Nav.Link>
                             </Nav.Item>
 
                         </Nav>
@@ -205,7 +210,7 @@ function Tab1({ objectTag, currentUser, ownerProfile, projectDetail, id, isUserJ
                 </Container>
             </StyleTab1>
         );
-    } else {
+    } else {    // ไม่ได้ ล็อกอิน
         return (
             <StyleTab1>
                 <Container style={{ maxWidth: "1140px" }}>

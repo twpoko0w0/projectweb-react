@@ -32,9 +32,8 @@ const Stylelist = styled.div`
     font-size: 20px;
   }
   .list-group-item.item {
-    display: flex;
-    justify-content: space-between;
-    height: 48px;
+    /
+    // height: 48px;
     border-left: none;
     border-right: none;
   }
@@ -84,10 +83,30 @@ const Stylelist = styled.div`
   .dropdown-menu{
     min-width: 80px;
   }
+  .name {
+    margin-right: 20px;
+  }
+  .col{
+    padding-right: 12px;
+  }
+  .box-grid{
+    display:flex;
+    justify-content: space-between;
+  }
+  .gridText{
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+  }
 `;
 
 function StartProStep4({ formdata, setFormdata, projectTag, tagList, newProjectId, forceUpdate }) {
+  const [isEditingTag, setIsEditingTag] = useState(0);
+  const [idObj, setIdObj] = useState(1);
   const { projectTagId, projectRole, projectPositionQuantity, } = formdata;
+  const [editTagSelect, setEditTagSelect] = useState(1);
+  const [editRoleSelect, setEditRoleSelect] = useState("");
+  const [editQuantitySelect, setEditQuantitySelect] = useState(1);
 
   // console.log("Quantity position: " + projectPositionQuantity + "\nTagID: " + projectTagId);
 
@@ -97,14 +116,109 @@ function StartProStep4({ formdata, setFormdata, projectTag, tagList, newProjectI
     )
   });
 
+  function DeleteTag(id) {
+    const index = tagList.map(x => x.id).indexOf(id);
+    const remove = index !== 0 ? tagList.splice(index, 1) : tagList.shift()
+    forceUpdate();
+  }
+
+  function ChangeTag() {
+    const index = tagList.map(x => x.id).indexOf(isEditingTag);
+
+    let tagToInt = parseInt(editTagSelect)
+    let projectTagName = projectTag.find(x => x.id === tagToInt).project_tag_name
+    let list = {
+      id: isEditingTag,
+      projectTagId: editTagSelect,
+      projectRole: editRoleSelect,
+      projectPositionQuantity: editQuantitySelect,
+      projectTagName: projectTagName
+    }
+    const remove = index !== 0 ? tagList.splice(index, 1) : tagList.shift()
+    // setIdObj((currId) => currId + 1)
+    tagList.push(list);
+    forceUpdate();
+    setIsEditingTag(0)
+    // console.log("Tag Name: " + projectTagName);
+  }
+
+  function EditTag(id, tagId, quantity, role) {
+    setIsEditingTag(id);
+    setEditTagSelect(tagId);
+    setEditQuantitySelect(quantity);
+    setEditRoleSelect(role);
+  }
+
   const tagElement = tagList.map((val) => {
     return (
       <ListGroup.Item className="item">
-        <span>{val.projectTagName}</span>
-        <p className="name">
-          {val.projectPositionQuantity + " ตำแหน่ง"} <span class="material-icons"><img src={More} alt="More" /></span>
-        </p>
-      </ListGroup.Item>
+        <Row className="box-grid">
+          {isEditingTag === val.id ?
+            <>
+              <Col>
+                <Row>
+                  <Col sm="8">
+                    <Form.Select
+                      name="nameTag"
+                      placeholder="สายงาน"
+                      value={editTagSelect}
+                      onChange={(e) => setEditTagSelect(e.target.value)}
+                    >
+                      {projectTagElement}
+
+                    </Form.Select>
+                  </Col>
+                  <Col>
+                    <Form.Select value={editQuantitySelect} onChange={(e) => setEditQuantitySelect(e.target.value)}>
+                      <option value={1}>1 ตำแหน่ง</option>
+                      <option value={2}>2 ตำแหน่ง</option>
+                      <option value={3}>3 ตำแหน่ง</option>
+                      <option value={4}>4 ตำแหน่ง</option>
+                      <option value={5}>5 ตำแหน่ง</option>
+                    </Form.Select>
+                  </Col>
+                </Row>
+                <Form.Control className="mt-2" placeholder="รายละเอียดสายงาน" type="text" value={editRoleSelect} onChange={(e) => setEditRoleSelect(e.target.value)} />
+              </Col>
+              <Col sm="auto">
+                <Button onClick={() => ChangeTag()}>
+                  บันทึก
+                </Button>
+                <span
+                  onClick={() => setIsEditingTag(0)}
+                  style={{ color: "#3082FE", marginLeft: "20px" }}
+                >
+                  ยกเลิก
+                </span>
+              </Col>
+            </>
+            :
+            <>
+              <Col>
+                <span>{val.projectTagName}</span>
+              </Col>
+              <Col >
+                <div className="gridText">
+                  <p className="name">
+                    {val.projectPositionQuantity + " ตำแหน่ง"}
+                  </p>
+                  <Dropdown className="Style-drop" align="end">
+                    <Dropdown.Toggle className="dropdown-box" as="span">
+                      <span class="material-icons-outlined">
+                        more_horiz
+                      </span>
+                    </Dropdown.Toggle>
+                    <Dropdown.Menu style={{ width: "80px" }}>
+                      <Dropdown.Item onClick={() => EditTag(val.id, val.projectTagId, val.projectPositionQuantity, val.projectRole)} >แก้ไข</Dropdown.Item>
+                      <Dropdown.Item style={{ color: "red" }} onClick={() => DeleteTag(val.id)}>ลบ</Dropdown.Item>
+                    </Dropdown.Menu>
+                  </Dropdown>
+                </div>
+              </Col>
+            </>
+          }
+        </Row>
+      </ListGroup.Item >
     )
   })
   // console.log("Here: " + formdata.projectTagId)
@@ -114,11 +228,13 @@ function StartProStep4({ formdata, setFormdata, projectTag, tagList, newProjectI
     let tagToInt = parseInt(projectTagId)
     let projectTagName = projectTag.find(x => x.id === tagToInt).project_tag_name
     let list = {
+      id: idObj,
       projectTagId: projectTagId,
       projectRole: projectRole,
       projectPositionQuantity: projectPositionQuantity,
       projectTagName: projectTagName
     }
+    setIdObj((currId) => currId + 1)
     tagList.push(list);
     // console.log("Tag Name: " + projectTagName);
   }

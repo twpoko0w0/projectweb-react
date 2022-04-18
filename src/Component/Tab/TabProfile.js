@@ -87,16 +87,18 @@ const StyleNav = styledComponents.div`
 .nav{
   position: relative;
 }
-a.Items1 {
+.Items1 {
     position: relative;
+    cursor: pointer;
     height: 67px;
 }
-.nav a.Items1:hover{
+.nav .Items1:hover{
     color: #3082FE;
     border-radius: 6%;
     background: #f9f9f9;
+    height: 67px ;
 }
-a.Items1:after{
+.Items1:after{
     content: "";
     position: absolute;
     background: #3082FE;
@@ -106,7 +108,7 @@ a.Items1:after{
     bottom: 0px;
     border-radius: 6%;
 }
-a.Items1:hover:after{
+.Items1:hover:after{
   width: 100%;
 }
 .box-filter{
@@ -139,7 +141,7 @@ padding: 0px;
 }
 `;
 function TabProfile({ userData, userSkill, userProjectData, userProjectDataAll, currentUser, UpdateWebsite, softwareRel,
-  softwareRelNew, softwareRelDel, id, userProjectFilter, setUserProjectFilter, userProjectFilterAll, setUserProjectFilterAll }) {
+  softwareRelNew, softwareRelDel, id, userProjectFilter, setUserProjectFilter, userProjectFilterAll, setUserProjectFilterAll, message }) {
 
   const [modalShow, setModalShow] = useState(false);
   const [openfilter, setOpenfilter] = useState(false);
@@ -160,26 +162,26 @@ function TabProfile({ userData, userSkill, userProjectData, userProjectDataAll, 
   const props = {
     userData, userSkill, userProjectData, modalShow, setModalShow, modalShowAbout,
     setModalShowAbout, userProjectDataAll, currentUser, UpdateWebsite, softwareRel,
-    softwareRelNew, softwareRelDel, userProjectFilter, userProjectFilterAll, setUserProjectFilterAll
+    softwareRelNew, softwareRelDel, userProjectFilter, userProjectFilterAll, setUserProjectFilterAll, message
   }
   return (
     <Tab.Container defaultActiveKey="link-1">
       <Container fluid="lg">
         <StyleNav>
           <Nav style={{ height: "67px", background: "#fff" }}>
-            <Nav.Item >
-              <Nav.Link className="Items1" eventKey="link-1" onClick={() => setOpenfilter(false)}>
+            <Nav.Item className="Items1">
+              <Nav.Link eventKey="link-1" onClick={() => setOpenfilter(false)}>
                 เกี่ยวกับ
               </Nav.Link>
             </Nav.Item>
-            <Nav.Item>
-              <Nav.Link className="Items2" eventKey="link-2" onClick={() => setOpenfilter(true)}>
+            <Nav.Item className="Items1">
+              <Nav.Link eventKey="link-2" onClick={() => setOpenfilter(true)}>
                 {" "}
                 ผลงาน
               </Nav.Link>
             </Nav.Item>
-            <Nav.Item>
-              <Nav.Link className="Items3" eventKey="link-3" onClick={() => setOpenfilter(true)}>
+            <Nav.Item className="Items1">
+              <Nav.Link eventKey="link-3" onClick={() => setOpenfilter(true)}>
                 {" "}
                 โปรเจคของฉัน
               </Nav.Link>

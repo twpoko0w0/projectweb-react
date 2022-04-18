@@ -67,6 +67,9 @@ const StyleTabSetting = styled.div`
   background: #EAF2FF;
    color: #0d6efd;
  }
+   .nav-item {
+      cursor: pointer;
+  }
 `;
 function ProfileSetting({ currentUser }) {
   const navigate = useNavigate();

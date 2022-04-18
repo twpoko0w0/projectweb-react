@@ -19,6 +19,7 @@ import firebase from 'firebase/compat/app';
 import ProfileSetting from "./Page/ProfileSetting";
 import LoginV2 from "./Page/LoginV2";
 import PDPA from "./Page/PDPA"
+import Forgotpassword from "./Page/Forgotpassword";
 
 function App() {
   const navigate = useNavigate();
@@ -37,6 +38,7 @@ function App() {
       <Routes>
         <Route path="/" element={<Homepage />}></Route>
         <Route path="Login" element={<LoginV2 />}></Route>
+        <Route path="/Forgotpassword" element={<Forgotpassword />}></Route>
         <Route path="Logindo" element={<Login />}></Route>
         <Route path="Create" element={<CreateStep1 />}></Route>
         <Route path="PDPA" element={<PDPA />}></Route>

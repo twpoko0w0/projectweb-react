@@ -87,9 +87,9 @@ const StyleBtnLogin = styled.div`
 
 
 export default function CreateStep1(handleSelect) {
-  const [tag1, setTag1] = useState(47)
-  const [tag2, setTag2] = useState(47)
-  const [tag3, setTag3] = useState(47)
+  const [tag1, setTag1] = useState(0)
+  const [tag2, setTag2] = useState(0)
+  const [tag3, setTag3] = useState(0)
   const [currentUser, setCurrentUser] = useState()
   const [projectTag, setProjectTag] = useState([])
   const [message, setMessage] = useState("")
@@ -123,23 +123,29 @@ export default function CreateStep1(handleSelect) {
       user_id: currentUser.uid,
       user_tag_id: tag3
     },]
-    object.map(x => {
-      axios.post(process.env.REACT_APP_API_ENDPOINT + "/api/usertagrel", { user_id: x.user_id, user_tag_id: x.user_tag_id })
-        .then(function (response) {
-          setMessage("สร้างบัญชีสำเร็จ!")
-          firebase.auth().signOut()
-          setTimeout(function () {
-            navigate({ pathname: '/' })
-          }, 2500);
+    if (tag1 === 0 || tag2 === 0 || tag3 === 0) {
+      setMessage("กรุณาเลือกแท็กให้ครบ")
+    } else {
+      object.map(x => {
 
+        axios.post(process.env.REACT_APP_API_ENDPOINT + "/api/usertagrel", { user_id: x.user_id, user_tag_id: x.user_tag_id })
+          .then(function (response) {
+            setMessage("สร้างบัญชีสำเร็จ!")
+            firebase.auth().signOut()
+            setTimeout(function () {
+              navigate({ pathname: '/' })
+            }, 2500);
+
+            console.log(response);
+          })
+      })
+      axios.post(process.env.REACT_APP_API_ENDPOINT + "/api/usersoftwarerel", { user_id: currentUser.uid, user_software_id: 0 })
+        .then(function (response) {
+          // navigate({ pathname: '/' })
           console.log(response);
         })
-    })
-    axios.post(process.env.REACT_APP_API_ENDPOINT + "/api/usersoftwarerel", { user_id: currentUser.uid, user_software_id: 0 })
-      .then(function (response) {
-        // navigate({ pathname: '/' })
-        console.log(response);
-      })
+    }
+
   }
 
   const tagElement = projectTag.map(x => {
@@ -159,22 +165,25 @@ export default function CreateStep1(handleSelect) {
                     <div className='mb-3'>
                       <Form.Label>เลือกสายงานที่สนใจ</Form.Label>
                       <Form.Select style={{ maxWidth: "400px" }} onChange={(e) => setTag1(e.target.value)} value={tag1}>
+                        <option value={0}>...</option>
                         {tagElement}
                       </Form.Select>
                     </div>
                     <div className='mb-3'>
                       <Form.Select style={{ maxWidth: "400px" }} onChange={(e) => setTag2(e.target.value)} value={tag2}>
+                        <option value={0}>...</option>
                         {tagElement}
                       </Form.Select>
                     </div>
                     <div className=''>
                       <Form.Select style={{ maxWidth: "400px" }} onChange={(e) => setTag3(e.target.value)} value={tag3}>
+                        <option value={0}>...</option>
                         {tagElement}
                       </Form.Select>
                     </div>
                     <div>
                       <StyleBtnLogin>
-                        {message && <Alert variant="success" className="mt-5">{message}</Alert>}
+                        {message === "กรุณาเลือกแท็กให้ครบ" ? <>{message && <Alert variant="danger" className="mt-5">{message}</Alert>}</> : <>{message && <Alert variant="success" className="mt-5">{message}</Alert>}</>}
                         <Button className="login" href="#" variant="primary" onClick={() => handleRegister()}>
                           ยืนยัน
                         </Button>

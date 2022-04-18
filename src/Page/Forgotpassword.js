@@ -1,8 +1,8 @@
-import React from 'react';
-import { Form , Row, Col, Container, Button } from 'react-bootstrap';
+import React, { useState } from 'react';
+import { Form, Row, Col, Container, Button, Alert } from 'react-bootstrap';
 import styled from 'styled-components';
-import emailsvg from '../Component/logo/Mail-bro1.png';
-import barstep3 from '../All_Img/Progress bar step3.png';
+import { getAuth, sendPasswordResetEmail } from "firebase/auth";
+
 
 const BodyStyle = styled.div`
 .inFO{
@@ -42,7 +42,7 @@ h5 {
 }
 `;
 
-const StyleBtnLogin =styled.div`
+const StyleBtnLogin = styled.div`
 .login {
   width: 352px;
   height: 48px;
@@ -55,48 +55,60 @@ const StyleBtnLogin =styled.div`
 
 
 
-export default function CreateStep1 (handleSelect) {
-  console.log('test')
+export default function Forgotpassword() {
+  const [message, setMessage] = useState("")
+  const [email, setEmail] = useState("")
+  const auth = getAuth();
+
+  function handleResetPassword() {
+    sendPasswordResetEmail(auth, email)
+      .then((res) => {
+        setMessage("ส่งเมลไปแล้ว")
+      })
+      .catch((error) => {
+        setMessage("ส่งลิงค์ล้มเหลว")
+      });
+    // currentUser.sendPasswordResetEmail(currentUser.email)
+  }
+
   return (
-      <BodyStyle>
-        <div>
-            <Row>
-                
-            </Row>
-        </div>
-        <div className="inFO">
+    <BodyStyle>
+      <div>
+        <Row>
+
+        </Row>
+      </div>
+      <div className="inFO">
         <Container>
-         <Style>
+          <Style>
             <Row>
-               <Col lg={6} className="ml">
-                  <div className="FormCon">
-                    <Form className="StyleForm">
-                      <h1>ลืมรหัส?</h1>
-                      <div className='help mb-4'>กรุณากรอกอีเมลที่ใช้สมัคร เพื่อเปลี่ยนรหัสผ่านอย่างรวดเร็วใน 2 ขั้นตอน</div>
-                        <Form.Label  className="inputPassword5">รหัสผ่าน</Form.Label>
-                        <Form.Control type="password" placeholder=""/>
-                      <div>
-                        <StyleBtnLogin>
-                          <Button className = "login" href ="#" variant="primary">
-                          รีเซ็ตรหัสผ่าน
-                          </Button>
-                        </StyleBtnLogin>
-                      </div>
+              <Col lg={6} className="ml">
+                <div className="FormCon">
+                  <Form className="StyleForm">
+                    <h1>ลืมรหัส?</h1>
+                    <div className='help mb-4'>กรุณากรอกอีเมลที่ใช้สมัคร เพื่อเปลี่ยนรหัสผ่านอย่างรวดเร็วใน 2 ขั้นตอน</div>
+                    <Form.Label className="inputPassword5">อีเมล</Form.Label>
+                    <Form.Control type="email" placeholder="" onChange={(e) => setEmail(e.target.value)} />
+                    <div>
+                      <StyleBtnLogin>
+                        {message === "ส่งเมลไปแล้ว" ? <>{message && <Alert variant="success">{message}</Alert>}</> : <>{message && <Alert variant="danger">{message}</Alert>}</>}
 
-
-                    </Form>
-                  </div>
-                </Col>
-
-
-                <Col  lg={6} >
-                    <h1 className = "text-end mg5" >Logo</h1>
-                </Col>
+                        <Button className="login" href="#" variant="primary" onClick={() => handleResetPassword()}>
+                          ยืนยันอีเมล
+                        </Button>
+                      </StyleBtnLogin>
+                    </div>
+                  </Form>
+                </div>
+              </Col>
+              <Col lg={6} >
+                <h1 className="text-end mg5" >Logo</h1>
+              </Col>
             </Row>
           </Style>
-          </Container>
-        </div>
-        
-      </BodyStyle>
+        </Container>
+      </div>
+
+    </BodyStyle>
   )
 }

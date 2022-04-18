@@ -2,6 +2,7 @@ FROM node:lts-alpine AS builder
 RUN mkdir -p /usr/src/app
 WORKDIR /usr/src/app
 ENV REACT_APP_API_ENDPOINT=https://api.experiencehub-161090-final.win
+ENV REACT_APP_EMAIL_CONFIRM_URL=https://experiencehub-161090-final.win
 COPY package.json .
 RUN npm install --ignore-platform
 COPY . .

@@ -91,13 +91,19 @@ const StyleBtnLogin = styled.div`
 
 
 export default function CreateStep1() {
-  console.log('test')
   const [currEmail, setCurrEmail] = useState("")
   const [currentUser, setCurrentUser] = useState()
+  const [password, setPassword] = useState("")
+  const [firstName, setFirstName] = useState("")
+  const [lastName, setLastName] = useState("")
   const passwordRef = useRef()
   const firstNameRef = useRef()
   const lastNameRef = useRef()
   const [province, setProvince] = useState(1);
+  const [passwordLengthValidate, setPasswordLengthValidate] = useState(false);
+  const [passwordUpperCaseValidate, setPasswordUpperCaseValidate] = useState(false);
+  const [firstNameValidate, setFirstNameValidate] = useState(false);
+  const [lastNameValidate, setLastNameValidate] = useState(false);
   const navigate = useNavigate()
 
   firebase.auth().onAuthStateChanged(user => {
@@ -107,28 +113,84 @@ export default function CreateStep1() {
     // console.log("Step3 :" + user.uid);
   })
 
-  function handleRegister() {
-    currentUser.updatePassword(passwordRef.current.value);
-    axios.post(process.env.REACT_APP_API_ENDPOINT + "/api/users", {
-      id: currentUser.uid,
-      email: currentUser.email,
-      user_activated: 1,
-      first_name: firstNameRef.current.value,
-      last_name: lastNameRef.current.value,
-      user_about: "",
-      user_website: "",
-      user_skill: "",
-      user_province_id: province,
-      user_image_link: "https://cdn-icons-png.flaticon.com/512/847/847969.png",
-      user_blog: "",
-      user_portfolio: ""
-    })
-      .then(function (response) {
-        navigate({ pathname: '/Signup/step4' })
-        console.log(response);
-      })
+  function handleCheckPassword() {
+    console.log("passwchec")
+    if (password.length < 6) {
+      setPasswordLengthValidate(true)
+      console.log("faalse")
+    } else if (password.length > 6) {
+      setPasswordLengthValidate(false)
+    }
+    if (password.search(/[A-Z]/) < 0) {
+      setPasswordUpperCaseValidate(true)
+    } else if (password.search(/[A-Z]/) > 0) {
+      setPasswordUpperCaseValidate(false)
+    }
   }
 
+  function handleRegister() {
+    let pwdLength = false;
+    let pwdUpperCase = false;
+    let name = false;
+    let last = false;
+    // setPassword(passwordRef.current.value)
+    if (password.length < 6) {
+      setPasswordLengthValidate(true)
+      pwdLength = true
+    } else if (password.length > 6) {
+      pwdLength = false
+      setPasswordLengthValidate(false)
+    }
+    if (password.search(/[A-Z]/) < 0) {
+      pwdUpperCase = true
+      setPasswordUpperCaseValidate(true)
+    } else if (password.search(/[A-Z]/) > 0) {
+      console.log("Here")
+      pwdUpperCase = false
+      setPasswordUpperCaseValidate(false)
+    }
+
+    if (firstName === "") {
+      name = true
+      setFirstNameValidate(true)
+    } else if (firstName !== "") {
+      name = false
+      setFirstNameValidate(false)
+    }
+
+    if (lastName === "") {
+      last = true
+      setLastNameValidate(true)
+    } else if (lastName !== "") {
+      last = false
+      setLastNameValidate(false)
+    }
+
+    if (pwdLength === false && pwdUpperCase === false && name === false && last === false) {
+      console.log("All Check validated")
+      currentUser.updatePassword(password);
+      axios.post(process.env.REACT_APP_API_ENDPOINT + "/api/users", {
+        id: currentUser.uid,
+        email: currentUser.email,
+        user_activated: 1,
+        first_name: firstName,
+        last_name: lastName,
+        user_about: "",
+        user_website: "",
+        user_skill: "",
+        user_province_id: province,
+        user_image_link: "https://cdn-icons-png.flaticon.com/512/847/847969.png",
+        user_blog: "",
+        user_portfolio: ""
+      })
+        .then(function (response) {
+          navigate({ pathname: '/Signup/step4' })
+          console.log(response);
+        })
+    }
+
+  }
+  console.log(passwordUpperCaseValidate)
   return (
     <BodyStyle>
       <div className="inFO">
@@ -151,17 +213,21 @@ export default function CreateStep1() {
                       <div className="row">
                         <div className='col-6'>
                           <Form.Label className="text_lable">ชื่อจริง</Form.Label>
-                          <Form.Control type="email" placeholder="" ref={firstNameRef} />
+                          <Form.Control type="email" placeholder="" onChange={(e) => setFirstName(e.target.value)} required hasValidation isInvalid={firstNameValidate} />
+                          <Form.Control.Feedback type="invalid" >กรุณากรอกชื่อ </Form.Control.Feedback>
                         </div>
                         <div className='col-6'>
                           <Form.Label className="text_lable">นามสกุล</Form.Label>
-                          <Form.Control type="email" placeholder="" ref={lastNameRef} />
+                          <Form.Control type="email" placeholder="" onChange={(e) => setLastName(e.target.value)} required hasValidation isInvalid={lastNameValidate} />
+                          <Form.Control.Feedback type="invalid" > กรุณากรอกนามสกุล </Form.Control.Feedback>
                         </div>
                       </div>
                     </div>
                     <div className="row1">
-                      <Form.Label className="inputPassword5">รหัสผ่าน</Form.Label>
-                      <Form.Control type="password" placeholder="" ref={passwordRef} />
+                      <Form.Label className="inputPassword5" >รหัสผ่าน</Form.Label>
+                      <Form.Control type="password" placeholder="" required hasValidation isInvalid={passwordLengthValidate || passwordUpperCaseValidate} onChange={(e) => setPassword(e.target.value)} />
+                      {passwordLengthValidate ? <Form.Control.Feedback type="invalid" > รหัสผ่านมี 6 ตัวอักษรขึ้นไป. </Form.Control.Feedback> : <Form.Label className="text-secondary">รหัสผ่านมี 6 ตัวอักษรขึ้นไป.</Form.Label>}
+                      {passwordUpperCaseValidate ? <Form.Control.Feedback type="invalid" >มีตัวอักษรพิมพ์ใหญ่ 1 ตัว. </Form.Control.Feedback> : <p><Form.Label className="text-secondary">มีตัวอักษรพิมพ์ใหญ่ 1 ตัว.</Form.Label></p>}
 
 
                     </div>

@@ -12,7 +12,8 @@ import { storage } from "../firebase";
 import Spinner from "../Component/LoadingSpinner/Spinner";
 import firebase from 'firebase/compat/app';
 
-const StyleBg = styled.div`background: #F9F9F9;`;
+const StyleBg = styled.div`
+background: #F9F9F9;`;
 const StyleTabMan = styled.div`
  header {
   display: flex ;
@@ -32,6 +33,9 @@ const StyleTabMan = styled.div`
    padding-top: 80px ;
    background-color: #ffff;
  }
+   .nav-item {
+      cursor: pointer;
+  }
 `;
 
 const findCardRole = [

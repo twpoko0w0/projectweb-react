@@ -69,7 +69,7 @@ font-weight: 700;
 
 function ModalEditProfile({ modalShow, setModalShow, software, userData, userTagEditProfile, userTagApi,
   userTag1, userTag2, userTag3, setuserTag1, setuserTag2, setuserTag3, UpdateUserProfile, setUserImage,
-  userImage, softwareRel, softwareRelNew, softwareRelDel, forceUpdate, currentUser, UpdateUserSoftware }) {
+  userImage, softwareRel, softwareRelNew, softwareRelDel, forceUpdate, currentUser, UpdateUserSoftware, message }) {
 
   const [checked, setChecked] = useState();
 
@@ -226,6 +226,7 @@ function ModalEditProfile({ modalShow, setModalShow, software, userData, userTag
 
           </Modal.Body>
           <Modal.Footer>
+            {message && <div className="mr-4 text-success">{message + "..."}</div>}
             <Button className="add-btn" onClick={() => UpdateUserProfile()}>submit</Button>
           </Modal.Footer>
         </StyleElem>
