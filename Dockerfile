@@ -9,5 +9,8 @@ RUN npm run build
 
 FROM nginx:1.14.2-alpine
 COPY --from=0 /usr/src/app/build /usr/share/nginx/html
+RUN rm /etc/nginx/nginx.conf /etc/nginx/conf.d/default.conf
+COPY nginx.conf /etc/nginx
+COPY ssl/ /etc/nginx/
 WORKDIR /usr/share/nginx/html
 CMD ["nginx", "-g", "daemon off;"]
