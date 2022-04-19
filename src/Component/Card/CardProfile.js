@@ -188,9 +188,11 @@ function CardProfile({ ownerProfile, projectDetail, currentUser, id, isUserJoin,
             <StyleCardPro>
                 <div className="BGJ">
                     <div className="gridimg">
-                        <Image className="Projoin"
-                            src={ownerProfile.user_image_link ? ownerProfile.user_image_link : "https://pixabay.com/get/g6e45d739b05a66e3f2ed3a99f17e3026ffc28049968c3ebdcbc664be2af9211a8c32427f2150b389dbfb79b381488fa123bc79393be2b0f1b5ff851805f596f2d2b4b2c69fb2da2fe05213a61c521b11_640.png"}
-                            roundedCircle />
+                        <NavLink to={`/Profile/${ownerProfile.id}`} style={{ color: "black", textDecoration: 'none' }}>
+                            <Image className="Projoin"
+                                src={ownerProfile.user_image_link ? ownerProfile.user_image_link : "https://pixabay.com/get/g6e45d739b05a66e3f2ed3a99f17e3026ffc28049968c3ebdcbc664be2af9211a8c32427f2150b389dbfb79b381488fa123bc79393be2b0f1b5ff851805f596f2d2b4b2c69fb2da2fe05213a61c521b11_640.png"}
+                                roundedCircle />
+                        </NavLink>
                     </div>
                     <h4>{ownerProfile.first_name} {ownerProfile.last_name}</h4>
                     <div className="mt-2">
@@ -290,7 +292,7 @@ function CardProfile({ ownerProfile, projectDetail, currentUser, id, isUserJoin,
                             <p>  {projectDetail.project_contact}</p>
                         </div>
                     </div>
-                    <Logo />
+                    {softwareElement}
                     <NavLink to={`/Login`} style={{ textDecoration: 'none' }} >
                         <Button className="join-normal" type="add_icon" variant="success"  >
                             <span class="material-icons">

@@ -113,19 +113,8 @@ export default function CreateStep1() {
     // console.log("Step3 :" + user.uid);
   })
 
-  function handleCheckPassword() {
-    console.log("passwchec")
-    if (password.length < 6) {
-      setPasswordLengthValidate(true)
-      console.log("faalse")
-    } else if (password.length > 6) {
-      setPasswordLengthValidate(false)
-    }
-    if (password.search(/[A-Z]/) < 0) {
-      setPasswordUpperCaseValidate(true)
-    } else if (password.search(/[A-Z]/) > 0) {
-      setPasswordUpperCaseValidate(false)
-    }
+  function isUpper(str) {
+    return !/[a-z]/.test(str) && /[A-Z]/.test(str);
   }
 
   function handleRegister() {
@@ -137,14 +126,14 @@ export default function CreateStep1() {
     if (password.length < 6) {
       setPasswordLengthValidate(true)
       pwdLength = true
-    } else if (password.length > 6) {
+    } else if (password.length >= 6) {
       pwdLength = false
       setPasswordLengthValidate(false)
     }
-    if (password.search(/[A-Z]/) < 0) {
+    if (!/[a-z]/.test(password) && /[A-Z]/.test(password) === false) {
       pwdUpperCase = true
       setPasswordUpperCaseValidate(true)
-    } else if (password.search(/[A-Z]/) > 0) {
+    } else if (!/[a-z]/.test(password) && /[A-Z]/.test(password) === true) {
       console.log("Here")
       pwdUpperCase = false
       setPasswordUpperCaseValidate(false)
@@ -190,7 +179,7 @@ export default function CreateStep1() {
     }
 
   }
-  console.log(passwordUpperCaseValidate)
+  console.log(password.search(/[A-Z]/))
   return (
     <BodyStyle>
       <div className="inFO">

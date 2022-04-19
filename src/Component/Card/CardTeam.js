@@ -3,6 +3,7 @@ import { Image } from "react-bootstrap";
 import img from "./icon-img/13e9b391de1953810fbd9a8559c3c4c4.jpg";
 import styled from "styled-components";
 import CardRandom from "./Card3data";
+import { NavLink } from 'react-router-dom';
 
 const StyleBg = styled.div`
   .BGT {
@@ -89,6 +90,8 @@ const findCardRole = [
 function CardTeam({ member, tagRel, projectTag }) {
   const [teams, setTeams] = useState(CardRandom);
 
+  console.log(member)
+
   const memberElement = member.sort((a, b) => a.id - b.id).map(x => {
     const role = findCardRole.find(y => y.id === x.project_role_id).role
 
@@ -100,7 +103,9 @@ function CardTeam({ member, tagRel, projectTag }) {
         <StyleElem >
           <div className="gridItems mt-4" >
             <div className="ItemsAll">
-              <Image className="ProTeam" src={x.user_image_link ? x.user_image_link : "https://cdn-icons-png.flaticon.com/512/847/847969.png"} roundedCircle />
+              <NavLink to={`/Profile/${x.user_id}`} style={{ color: "black", textDecoration: 'none' }}>
+                <Image className="ProTeam" src={x.user_image_link ? x.user_image_link : "https://cdn-icons-png.flaticon.com/512/847/847969.png"} roundedCircle />
+              </NavLink>
               <div className="TextTeam">
                 <span className="text">{x.first_name}</span> <br />
                 <button className="work">{b}</button>{" "}
@@ -119,7 +124,9 @@ function CardTeam({ member, tagRel, projectTag }) {
         <StyleElem >
           <div className="gridItems mt-4" >
             <div className="ItemsAll">
-              <Image className="ProTeam" src={x.user_image_link ? x.user_image_link : "https://cdn-icons-png.flaticon.com/512/847/847969.png"} roundedCircle />
+              <NavLink to={`/Profile/${x.user_id}`} style={{ color: "black", textDecoration: 'none' }}>
+                <Image className="ProTeam" src={x.user_image_link ? x.user_image_link : "https://cdn-icons-png.flaticon.com/512/847/847969.png"} roundedCircle />
+              </NavLink>
               <div className="TextTeam">
                 <span className="text">{x.first_name}</span> <br />
 

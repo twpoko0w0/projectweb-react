@@ -25,13 +25,7 @@ function FormSettingProfile({ currentUser, firstName, lastName, email, setFirstN
           />
         </Col>
       </Row>
-      <Form.Label style={{ marginTop: "20px" }}>อีเมลหลัก</Form.Label>
-      <Form.Control
-        type="text"
-        name="editEmailProfile"
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
-      />
+
       {message && <Alert variant="success" className="mt-5">{message}</Alert>}
       <div className="contant-box">
         <span>ยกเลิก</span>

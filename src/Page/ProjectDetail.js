@@ -142,7 +142,8 @@ function ProjectDetail({ currentUser }) {
                         last_name: memberData[i].last_name,
                         user_image_link: memberData[i].user_image_link,
                         project_tag_rel_id: thisMember[i].project_tag_rel_id,   // ต้องเอาจาก user project rel  191, 186
-                        project_role_id: thisMember[i].project_role_id
+                        project_role_id: thisMember[i].project_role_id,
+                        user_id: memberData[i].id
                       }
                       member.push(obj)
                     }
@@ -193,9 +194,11 @@ function ProjectDetail({ currentUser }) {
                         last_name: memberData[i].last_name,
                         user_image_link: memberData[i].user_image_link,
                         project_tag_rel_id: thisMember[i].project_tag_rel_id,   // ต้องเอาจาก user project rel  191, 186
-                        project_role_id: thisMember[i].project_role_id
+                        project_role_id: thisMember[i].project_role_id,
+                        user_id: memberData[i].user_id,
                       }
                       member.push(obj)
+
                     }
                     if (isMounted) {
                       setIsLoading(true)

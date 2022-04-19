@@ -78,6 +78,7 @@ function Profileuser() {
   const [userProjectRel, setUserProjectRel] = useState([])
   const [userProjectData, setUserProjectData] = useState([])
   const [userProjectDataAll, setUserProjectDataAll] = useState([])
+  const [userProjectDataAllDisplay, setUserProjectDataAllDisplay] = useState([])
   const [userProjectFilter, setUserProjectFilter] = useState([])
   const [userProjectFilterAll, setUserProjectFilterAll] = useState([])
   const [userTag1, setuserTag1] = useState({
@@ -196,11 +197,16 @@ function Profileuser() {
                   return thisUserProject.some(y => x.id === y.project_id)
                 })
 
+                const thisUserProjectDataForDisplay = resProject.filter(x => {
+                  return thisUserProject.some(y => x.id === y.project_id && y.project_role_id !== 1)
+                })
+
                 if (isMounted) {
                   setUserProjectData(thisUserProjectDataOwner)    // <== Current User project Owner
                   setUserProjectDataAll(thisUserProjectData)    // All join project
                   setUserProjectFilter(thisUserProjectDataOwner)
                   setUserProjectFilterAll(thisUserProjectData)
+                  setUserProjectDataAllDisplay(thisUserProjectDataForDisplay)
                   setIsLoading(true)
                 }
 
@@ -410,7 +416,7 @@ function Profileuser() {
                     <h2>{userData.first_name} {userData.last_name}</h2>
                     <div className="text-data">
                       <span className="status-lable">สถานะ :</span>
-                      เจ้าของ {userProjectData.length} โปรเจค, เข้าร่วม {userProjectDataAll.length} โปรเจค
+                      เจ้าของ {userProjectData.length} โปรเจค, เข้าร่วม {userProjectDataAllDisplay.length} โปรเจค
                     </div>
                     <div className="lable-program">โปรแกรมที่ใช้</div>
                     <Stylelogo className="tag-program">

@@ -8,72 +8,88 @@ import { auth } from "../../firebase";
 import { getAuth, signInWithPopup, FacebookAuthProvider } from "firebase/auth";
 import LogoApp from '../../Component/logo/Frame.svg'
 import Image from '../../All_Img/Untitled-2 1.svg'
+import Google from "../../Component/logo/facebookLogin.svg";
+import FacebookLogin from "../../Component/logo/Google.svg";
 
 
 const BodyStyle = styled.div`
-.inFO{
-  height: 100vh;
-  background: linear-gradient(to right, #fff 63%, rgba(48, 130, 254, 0.05) 32%);
-  );
+*{
+  padding: 0 px;
+  margin: 0px;
 }
-`;
-const Style = styled.div`
-.FormCon{
-  margin: 0 ;
-  display: flex;
-  justify-content: center;
-}
-.StyleForm{
-  width:352px;
-  margin-left: 50px;
-}
-h1 {
-  margin: 0 auto;
-  padding-top: 74px;
-  padding-bottom: 47px;
-  text-align: center;
-}
-.Textpassword{
-  text-decoration: none;
-  float: right;
-}
-.mg5{
-  margin-right: 25px;
-}
-;
-้
-`;
-const StyleBtnLogin = styled.div`
-.login {
-  width: 352px;
-  height: 48px;
-  margin-top: 24px;
-  padding: 12px 16px ;
-  box-sizing: border-box;
-}
-`;
-
-const StyleBtnLogingoogle = styled.div`
+  .StyleForm {
+    display: flex;
+    justify-content: center;
+    height: 100vh;
+  }
+  .Box-content {
+    width: 352px;
+  }
 .logingoogle {
+  text-align: start;
   width: 352px;
   height: 48px;
-  padding: 12px 16px ;
-  box-sizing: border-box;
+  padding: 12px 64px;
   background-color: #fff;
   border: 1px solid #000;
   color: #000;
 }
-`;
-
-const StyleBtnLoginfacebook = styled.div`
 .loginfacebook {
+  text-align: start;
   margin-top: 8px;
   width: 352px;
   height: 48px;
-  padding: 12px 16px ;
-  box-sizing: border-box;
-  background-color: #4465AB;
+  padding: 12px 64px;
+  background-color: #4465ab;
   color: #fff;
+}
+.login {
+  width: 100%;
+  height: 48px;
+  margin-top: 32px;
+  padding: 12px 16px;
+}
+.box-img {
+  position: relative;
+  height: 100%;
+  padding: 0px;
+  background: rgba(48, 130, 254, 0.1);
+}
+.Logo {
+  padding-top: 74px;
+}
+img.img-app {
+  position: absolute;
+  width: 100%;
+  right: 0;
+  bottom: 0;
+}
+.logoin {
+  float: left;
+  margin-top: 2px;
+  padding-right: 20px;
+}
+h1 {
+  margin: 0;
+  padding-top: 74px;
+  padding-bottom: 47px;
+  font-family: "Roboto";
+  font-style: normal;
+  font-weight: 400;
+  text-align: center;
+}
+.form-check {
+  
+  padding: 0px;
+}
+.ddd{
+  margin-top: 20px;
+}
+.form-check .form-check-input{
+
+  margin-top: 5px;
+  margin-right: 10px;
+  margin-left: 0px;
 }
 `;
 
@@ -134,7 +150,7 @@ export default function CreateStep2() {
       const user = await firebase.auth().createUserWithEmailAndPassword(emailRef.current.value, 123456)
         .then((res) => {
           res.user.sendEmailVerification({
-            url: process.env.REACT_APP_EMAIL_CONFIRM_URL + "/signup/step3",
+            url: "http://localhost:2022/signup/step3",
           });
           // return createUser({ email, uid: res.user.uid, name });
         })
@@ -270,68 +286,52 @@ export default function CreateStep2() {
 
 
   return (
-    <BodyStyle>
+    <>
 
-      <div className="inFO">
-        <Container>
-          <Style>
-            <Row>
-              <Col lg={6} className="ml">
-                <div className="FormCon">
-                  <Form className="StyleForm">
-                    <h1>สร้างประสบการณ์ที่ไม่มีวันจบ</h1>
-                    <Form.Label className="text_lable">อีเมล</Form.Label>
-                    {error && <Alert variant="danger">{error}</Alert>}
-                    <Form.Control type="email" placeholder="" ref={emailRef} required />
-                    <div className="form-check">
-                      <input className="form-check-input" type="checkbox" id="defaultCheck1" onChange={() => handleChange()} required />
-                      <label className="form-check-label" >
-                        ยอมรับนโยบาย    <a href="PDPA" className="Textpassword" >ความเป็นส่วนตัว</a> {''}
-                      </label>
-                    </div>
-                    <StyleBtnLogin>
-                      <Button className="login" href="#" variant="primary" onClick={(e) => handleSubmit(e)}>
-                        สร้างบัญชี
-                      </Button>
-                    </StyleBtnLogin>
-                    <Stylelol>
-                      <hr /><span>หรือ</span><hr />
-                    </Stylelol>
-
-                    <StyleBtnLogingoogle>
-                      <Button className="logingoogle" href="#" variant="primary" onClick={() => GoogleAuth()}>
-                        เข้าสู่ระบบด้วย Google
-                      </Button>
-                    </StyleBtnLogingoogle>
-
-                    <StyleBtnLoginfacebook>
-                      <Button className="loginfacebook" href="#" variant="primary" onClick={() => FacebookAuth()}>
-                        เข้าสู่ระบบด้วย Facebook
-                      </Button>
-                    </StyleBtnLoginfacebook>
-
-                  </Form>
+      <BodyStyle >
+        <Row>
+          <Col lg={8} >
+            <div className="StyleForm">
+              <Form className="Box-content">
+                <h1>สร้างประสบการณ์ที่ไม่มีวันจบ</h1>
+                <Form.Label className="text_lable">อีเมล</Form.Label>
+                {error && <Alert variant="danger">{error}</Alert>}
+                <Form.Control type="email" placeholder="" ref={emailRef} required />
+                <div className="form-check ddd">
+                  <input className="form-check-input" type="checkbox" id="defaultCheck1" onChange={() => handleChange()} required />
+                  <label className="form-check-label" >
+                    ยอมรับนโยบาย    <a href="PDPA" className="Textpassword" >ความเป็นส่วนตัว</a> {''}
+                  </label>
                 </div>
-              </Col>
-              <Col lg={6} >
-                <div className="ms-4">
-                  <div className="ms-5">
-                    <div className="ms-5">
-                      <div className="ms-5">
-                        <div className="d-flex justify-content-center Logo">
-                          <div className="ms-5"><img className="logo-app ms-5" src={LogoApp} /></div>
-                        </div>
-                        <div className="ms-5"><img className="img-app ms-5" src={Image} /></div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </Col>
-            </Row>
-          </Style>
-        </Container>
-      </div>
+                <Button className="login" href="#" variant="primary" onClick={(e) => handleSubmit(e)}>
+                  สร้างบัญชี
+                </Button>
+                <Stylelol>
+                  <hr /><span>หรือ</span><hr />
+                </Stylelol>
 
-    </BodyStyle>
+                <Button className="logingoogle" href="#" variant="primary" onClick={() => GoogleAuth()}>
+                  <img className="logoin" src={Google} />
+                  เข้าสู่ระบบด้วย Google
+                </Button>
+                <Button className="loginfacebook" href="#" variant="primary" onClick={() => FacebookAuth()}>
+                  <img className="logoin" src={FacebookLogin} />
+                  เข้าสู่ระบบด้วย Facebook
+                </Button>
+              </Form>
+            </div>
+          </Col>
+          <Col style={{ padding: "0" }}>
+            <div className="box-img">
+              <div className="d-flex justify-content-center Logo">
+                <img className="logo-app" src={LogoApp} />
+              </div>
+              <img className="img-app" src={Image} />
+            </div>
+          </Col>
+        </Row>
+      </BodyStyle>
+
+    </>
   )
 }

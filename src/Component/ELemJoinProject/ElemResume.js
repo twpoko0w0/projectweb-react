@@ -258,7 +258,7 @@ function TabManage({ joinReq, newUserJoinObj, userReq, id, tagRel, projectTag })
 
   function handleTabpane(id, tagname, software, userSoftware) {
     const currUser = newUserJoinObj.find((x) => x.user_id === id);
-    const currUserProject = userReq.filter((x) => x.user_id === id);
+    const currUserProject = userReq.filter((x) => x.user_id === id && x.project_role_id !== 1);
 
     const tagId = tagRel.find(j => j.id === currUser.project_tag_rel_id).project_tag_id
     const tagName = projectTag.find(j => j.id === parseInt(tagId)).project_tag_name
