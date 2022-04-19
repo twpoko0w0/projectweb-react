@@ -65,6 +65,11 @@ font-weight: 700;
   .modal-footer{
     border-top: none;
   }
+  span{
+    padding: 0px;
+    margin: 0px;
+
+  }
 `;
 
 function ModalEditProfile({ modalShow, setModalShow, software, userData, userTagEditProfile, userTagApi,
@@ -159,28 +164,28 @@ function ModalEditProfile({ modalShow, setModalShow, software, userData, userTag
 
 
   const softwareElement = software.map((x) => {
-    if (x.software_image_link !== " ") {
-      return (
-        <span>
-          {softwareRelNew.map(y => y.user_software_id).indexOf(x.id) === -1 ? // ไม่มี:มี
-            <>
-              <button className="Tool-tag mt-2" onClick={() => handleSoftwareAdd(x.id)}>
-                <img width="24" height="24" src={x.software_image_link} alt="gitlab" className="ms-2" />
-                {x.user_software}
-              </button>
-            </>
-            :
-            <>
-              <button className="Tool-tag mt-2 bg-primary text-light" onClick={() => handleSoftwareRemove(x.id)}>
-                <img width="24" height="24" src={x.software_image_link} alt="gitlab" className="ms-2" />
-                {x.user_software}
-              </button>
-            </>
-          }
 
-        </span>
-      );
-    }
+    return (
+      <span>
+        {softwareRelNew.map(y => y.user_software_id).indexOf(x.id) === -1 ? // ไม่มี:มี
+          <>
+            <button className="Tool-tag mt-2" onClick={() => handleSoftwareAdd(x.id)}>
+              <img width="24" height="24" src={x.software_image_link} alt="gitlab" className="ms-2" />
+              {x.user_software}
+            </button>
+          </>
+          :
+          <>
+            <button className="Tool-tag mt-2 bg-primary text-light" onClick={() => handleSoftwareRemove(x.id)}>
+              <img width="24" height="24" src={x.software_image_link} alt="gitlab" className="ms-2" />
+              {x.user_software}
+            </button>
+          </>
+        }
+
+      </span>
+    );
+
   });
   return (
     <>

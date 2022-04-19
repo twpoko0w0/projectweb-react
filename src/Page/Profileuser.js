@@ -163,8 +163,9 @@ function Profileuser() {
         axios.get(process.env.REACT_APP_API_ENDPOINT + "/api/usersoftware")
           .then((res) => {
             const resSoftware = res.data;
+            const filter = resSoftware.filter(x => x.software_image_link !== " ")
             if (isMounted) {
-              setSoftware(resSoftware)
+              setSoftware(filter)
             }
 
           });

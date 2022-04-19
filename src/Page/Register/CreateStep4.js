@@ -4,27 +4,28 @@ import styled from 'styled-components';
 import firebase from 'firebase/compat/app';
 import { Link, useNavigate } from "react-router-dom"
 import barstep4 from "../../All_Img/Progress bar step4.png"
+import LogoApp from '../../Component/logo/Frame.svg'
 import axios from "axios";
 
 const BodyStyle = styled.div`
-.inFO{
-  height: 100vh;
-  background: linear-gradient(to right, #fff 63%, rgba(48, 130, 254, 0.05) 32%);
-  );
+*{
+  padding: 0px;
+  margin: 0px;
 }
-`;
-const Style = styled.div`
-.FormCon{
-  margin: 0 ;
-  display: flex;
-  justify-content: center;
+.StyleForm {
+    display: flex;
+    justify-content: center;
+    height: 100vh;
+  }
+  .Box-content {
+    width: 352px;
+  }
+  .box-img {
+  position: relative;
+  height: 100%;
+  padding: 0px;
+  background: rgba(48, 130, 254, 0.1);
 }
-
-.StyleForm{
-  width:352px;
-  margin-left: 50px;
-}
-
 h1 {
   margin: 0 auto;
   padding-top: 74px;
@@ -70,7 +71,12 @@ h5 {
 .progressbar{
   width: 180px;
 }
-
+.bar4{
+   margin-right: 20px;
+}
+.Logo {
+  padding-top: 74px;
+}
 `;
 
 const StyleBtnLogin = styled.div`
@@ -153,75 +159,65 @@ export default function CreateStep1(handleSelect) {
   })
   return (
     <BodyStyle>
+      <Row>
+        <Col lg={8} >
+          <div className="StyleForm">
+            <Form className="Box-content">
+              <h1>เลือกสายงาน</h1>
+              <div className='mb-3'>
+                <Form.Label>เลือกสายงานที่สนใจ</Form.Label>
+                <Form.Select style={{ maxWidth: "400px" }} onChange={(e) => setTag1(e.target.value)} value={tag1}>
+                  <option value={0}>...</option>
+                  {tagElement}
+                </Form.Select>
+              </div>
+              <div className='mb-3'>
+                <Form.Select style={{ maxWidth: "400px" }} onChange={(e) => setTag2(e.target.value)} value={tag2}>
+                  <option value={0}>...</option>
+                  {tagElement}
+                </Form.Select>
+              </div>
+              <div className=''>
+                <Form.Select style={{ maxWidth: "400px" }} onChange={(e) => setTag3(e.target.value)} value={tag3}>
+                  <option value={0}>...</option>
+                  {tagElement}
+                </Form.Select>
+              </div>
+              <div>
+                <StyleBtnLogin>
+                  {message === "กรุณาเลือกแท็กให้ครบ" ? <>{message && <Alert variant="danger" className="mt-5">{message}</Alert>}</> : <>{message && <Alert variant="success" className="mt-5">{message}</Alert>}</>}
+                  <Button className="login" href="#" variant="primary" onClick={() => handleRegister()}>
+                    ยืนยัน
+                  </Button>
+                </StyleBtnLogin>
+              </div>
+            </Form>
+          </div>
+        </Col>
 
-      <div className="inFO">
-        <Container>
-          <Style>
-            <Row>
-              <Col lg={6} className="ml">
-                <div className="FormCon">
-                  <Form className="StyleForm">
-                    <h1>เลือกสายงาน</h1>
-                    <div className='mb-3'>
-                      <Form.Label>เลือกสายงานที่สนใจ</Form.Label>
-                      <Form.Select style={{ maxWidth: "400px" }} onChange={(e) => setTag1(e.target.value)} value={tag1}>
-                        <option value={0}>...</option>
-                        {tagElement}
-                      </Form.Select>
-                    </div>
-                    <div className='mb-3'>
-                      <Form.Select style={{ maxWidth: "400px" }} onChange={(e) => setTag2(e.target.value)} value={tag2}>
-                        <option value={0}>...</option>
-                        {tagElement}
-                      </Form.Select>
-                    </div>
-                    <div className=''>
-                      <Form.Select style={{ maxWidth: "400px" }} onChange={(e) => setTag3(e.target.value)} value={tag3}>
-                        <option value={0}>...</option>
-                        {tagElement}
-                      </Form.Select>
-                    </div>
-                    <div>
-                      <StyleBtnLogin>
-                        {message === "กรุณาเลือกแท็กให้ครบ" ? <>{message && <Alert variant="danger" className="mt-5">{message}</Alert>}</> : <>{message && <Alert variant="success" className="mt-5">{message}</Alert>}</>}
-                        <Button className="login" href="#" variant="primary" onClick={() => handleRegister()}>
-                          ยืนยัน
-                        </Button>
-                      </StyleBtnLogin>
-                    </div>
-                  </Form>
-                </div>
-              </Col>
-
-              <Col lg={6} >
-                <h1 className="text-end mg5" >Logo</h1>
-                <div className="progressbar float-end ">
-                  <div className='row'>
-                    <div className='col-3'>
-                      <img className="bar2 d-inline text-end" src={barstep4} alt="barstep4" />
-                    </div>
-                    <div className='col-9'>
-                      <div className="d-inline ">
-                        <div className="inline-block lablefirst">กรอกอีเมล</div>
-                        <div className="inline-block lablesecon ">ยืนยันอีเมล</div>
-                        <div className="inline-block lablesecon">สร้างโปรไฟล์</div>
-                        <div className="inline-block lablein">เลือกสายงาน</div>
-                      </div>
-                    </div>
-
-                    <div className="d-inline">
-
-                    </div>
+        <Col >
+          <div className="box-img">
+            <div className="Logo d-flex justify-content-center ">
+              <img className="logo-app" src={LogoApp} alt="logoapp" />
+            </div>
+            <div className="d-flex justify-content-center mt-5 ">
+              <Row className="mt-5">
+                <Col sm="auto" style={{ padding: "0px" }}>
+                  <img className="bar4 d-inline text-end" src={barstep4} alt="barstep4" />
+                </Col>
+                <Col sm="auto" style={{ padding: "0px" }}>
+                  <div className="d-inline">
+                    <div className="inline-block lablefirst">กรอกอีเมล</div>
+                    <div className="inline-block lablefirst ">ยืนยันอีเมล</div>
+                    <div className="inline-block lablefirst">สร้างโปรไฟล์</div>
+                    <div className="inline-block lablein">เลือกสายงาน</div>
                   </div>
-                </div>
-
-
-              </Col>
-            </Row>
-          </Style>
-        </Container>
-      </div>
-
+                </Col>
+              </Row>
+            </div>
+          </div>
+        </Col>
+      </Row>
     </BodyStyle>
   )
 }

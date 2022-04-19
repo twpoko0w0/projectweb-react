@@ -4,23 +4,26 @@ import styled from 'styled-components';
 import firebase from 'firebase/compat/app';
 import Mailbro1 from '../../Component/logo/Mailbro1.png';
 import barstep2 from '../../All_Img/Progress bar step2.png';
+import LogoApp from '../../Component/logo/Frame.svg'
 
 const BodyStyle = styled.div`
-.inFO{
-  height: 100vh;
-  background: linear-gradient(to right, #fff 63%, rgba(48, 130, 254, 0.05) 32%);
-  );
+*{
+  padding: 0px;
+  margin: 0px;
 }
-`;
-const Style = styled.div`
-.FormCon{
-  margin: 0 ;
-  display: flex;
-  justify-content: center;
-}
-.StyleForm{
-  width:800px;
-  margin-left: 50px;
+.StyleForm {
+    display: flex;
+    justify-content: center;
+    height: 100vh;
+  }
+  .Box-content {
+    width: 352px;
+  }
+  .box-img {
+  position: relative;
+  height: 100%;
+  padding: 0px;
+  background: rgba(48, 130, 254, 0.1);
 }
 h1 {
   margin: 0 auto;
@@ -72,21 +75,10 @@ h5 {
 .progressbar{
   width: 180px;
 }
-
-`;
-
-const Stylelol = styled.div`
-display: flex;
-justify-content: space-between;
-margin:24px 0px;
-hr{
-  display: inline-block;
-  width: 144px;
-  background: #AFAFAF;
-  align-self: center;
+.Logo {
+  padding-top: 74px;
 }
 `;
-
 
 export default function CreateStep1() {
   console.log('test')
@@ -99,47 +91,42 @@ export default function CreateStep1() {
   })
   return (
     <BodyStyle>
-      <div className="inFO">
-        <Container>
-          <Style>
-            <Row>
-              <Col lg={6} className="ml">
-                <div className="FormCon">
-                  <Form className="StyleForm">
-                    <h1>ยืนยันอีเมล</h1>
-                    <div className="text-center">
-                      <img className="svg " src={Mailbro1} alt="emailsvg" />
-                    </div>
-                    <h4>เราได้ส่งข้อความไปที่อีเมล {currEmail} </h4>
-                    <h5>กดที่ลิ้งเพื่อยืนยันตัวตน และเริ่มสร้างโปรเจคกับเราได้เลย! </h5>
-                  </Form>
-                </div>
-              </Col>
-              <Col lg={6} >
-                <h1 className="text-end mg5" >Logo</h1>
-                <div className="progressbar float-end ">
-                  <div className='row'>
-                    <div className='col-3'>
-                      <img className="bar2 d-inline text-end" src={barstep2} alt="barstep2" />
-                    </div>
-                    <div className='col-9'>
-                      <div className="d-inline">
-                        <div className="inline-block lablefirst">กรอกอีเมล</div>
-                        <div className="inline-block lablein ">ยืนยันอีเมล</div>
-                        <div className="inline-block lable">สร้างโปรไฟล์</div>
-                        <div className="inline-block lable">เลือกสายงาน</div>
-                      </div>
-                    </div>
-                    <div className="d-inline">
-                    </div>
+      <Row>
+        <Col lg={8}  >
+          <div className="StyleForm">
+            <Form className="Box-content">
+              <h1>ยืนยันอีเมล</h1>
+              <div className="text-center">
+                <img className="svg " src={Mailbro1} alt="emailsvg" />
+              </div>
+              <h4>เราได้ส่งข้อความไปที่อีเมล {currEmail} </h4>
+              <h5>กดที่ลิ้งเพื่อยืนยันตัวตน และเริ่มสร้างโปรเจคกับเราได้เลย! </h5>
+            </Form>
+          </div>
+        </Col>
+        <Col >
+          <div className="box-img">
+            <div className="Logo d-flex justify-content-center ">
+              <img className="logo-app" src={LogoApp} alt="logoapp" />
+            </div>
+            <div className="d-flex justify-content-center mt-5 ">
+              <Row className="mt-5">
+                <Col sm="auto" style={{ padding: "0px" }}>
+                  <img className="bar2 d-inline text-end" src={barstep2} alt="barstep2" />
+                </Col>
+                <Col sm="auto" style={{ padding: "0px" }}>
+                  <div className="d-inline">
+                    <div className="inline-block lablefirst">กรอกอีเมล</div>
+                    <div className="inline-block lablein ">ยืนยันอีเมล</div>
+                    <div className="inline-block lable">สร้างโปรไฟล์</div>
+                    <div className="inline-block lable">เลือกสายงาน</div>
                   </div>
-                </div>
-              </Col>
-            </Row>
-          </Style>
-        </Container>
-      </div>
-
+                </Col>
+              </Row>
+            </div>
+          </div>
+        </Col>
+      </Row>
     </BodyStyle>
   )
 }

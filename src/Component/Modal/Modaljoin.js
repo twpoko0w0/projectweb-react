@@ -100,37 +100,53 @@ function Modaljoin({ modalShow, setModalShow, tagRel, projectTag, currentUser, i
 
 
   function handleJoinRequest() {
+    let currTag = false;
+    let currInterview = false;
+    let currFacebook = false;
+    let currEmail = false;
+    let currLine = false;
+
     if (tagName === "") {
+      currTag = true;
       setTagValidated(true)
     } else if (tagName !== "") {
+      currTag = false;
       setTagValidated(false)
     }
 
     if (interview === "") {
+      currInterview = true;
       setInterviewValidated(true)
     } else if (interview !== "") {
+      currInterview = false;
       setInterviewValidated(false)
     }
 
     if (facebook === "") {
+      currFacebook = true;
       setFacebookValidated(true)
     } else if (facebook !== "") {
+      currFacebook = false;
       setFacebookValidated(false)
     }
 
     if (email === "") {
+      currEmail = true
       setEmailValidated(true)
     } else if (email !== "") {
+      currEmail = false;
       setEmailValidated(false)
     }
 
     if (line === "") {
+      currLine = true;
       setLineValidated(true)
     } else if (line !== "") {
+      currLine = false;
       setLineValidated(false)
     }
 
-    if (tagValidated === false && interviewValidated === false && facebookviewValidated === false && emailValidated === false && lineValidated === false) {
+    if (currTag === false && currInterview === false && currFacebook === false && currEmail === false && currLine === false) {
       if (tagName !== "") {
         const relIdfindName = objectTag.filter((val) => val.project_tag_name.toLowerCase().includes(tagName.toLowerCase()))
         const relid = relIdfindName[0].project_tag_relation_id
