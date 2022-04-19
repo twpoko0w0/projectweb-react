@@ -142,11 +142,13 @@ function TabManage({ projectDetail, objectTag, tagRel, projectTag, updateProject
                       เชิญคนรู้จัก
                     </Nav.Link>
                   </Nav.Item>
-                  <Nav.Item >
-                    <Nav.Link className="lable-1" eventKey="6">
-                      จัดการโปรเจค
-                    </Nav.Link>
-                  </Nav.Item>
+                  {currUserRole === 1 &&
+                    <Nav.Item >
+                      <Nav.Link className="lable-1" eventKey="6">
+                        จัดการโปรเจค
+                      </Nav.Link>
+                    </Nav.Item>}
+
                 </Nav>
               </Col>
               <Col className="bordr-style" style={{ height: "100vh" }} >

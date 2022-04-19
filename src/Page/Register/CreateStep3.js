@@ -270,7 +270,6 @@ export default function CreateStep1() {
           </Style>
         </Container>
       </div>
-
     </BodyStyle>
   )
 }
