@@ -9,7 +9,11 @@ import { Link, useNavigate } from "react-router-dom"
 import barstep3 from '../../All_Img/Progress bar step3.png';
 
 const BodyStyle = styled.div`
-.StyleForm {
+*{
+  padding: 0 px;
+  margin: 0px;
+}
+  .StyleForm {
     display: flex;
     justify-content: center;
     height: 100vh;
@@ -186,85 +190,87 @@ export default function CreateStep1() {
   }
   console.log(password.search(/[A-Z]/))
   return (
-    <BodyStyle>
-      <Row>
-        <Col lg={8}>
-          <div className="StyleForm">
-            <Form className="Box-content">
-              <h1>สร้างโปรไฟล์</h1>
-              <div class="alert alert-primary d-flex align-items-center " role="alert">
-                <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-check-circle-fill" viewBox="0 0 16 16">
-                  <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z" />
-                </svg>
-                <div className='ms-3'>
-                  อีเมล <b>{currEmail}</b> ได้รับการยืนยันแล้ว
-                </div>
-              </div>
-              <div className="row1">
-                <div className="row">
-                  <div className='col-6'>
-                    <Form.Label className="text_lable">ชื่อจริง</Form.Label>
-                    <Form.Control type="email" placeholder="" onChange={(e) => setFirstName(e.target.value)} required hasValidation isInvalid={firstNameValidate} />
-                    <Form.Control.Feedback type="invalid" >กรุณากรอกชื่อ </Form.Control.Feedback>
-                  </div>
-                  <div className='col-6'>
-                    <Form.Label className="text_lable">นามสกุล</Form.Label>
-                    <Form.Control type="email" placeholder="" onChange={(e) => setLastName(e.target.value)} required hasValidation isInvalid={lastNameValidate} />
-                    <Form.Control.Feedback type="invalid" > กรุณากรอกนามสกุล </Form.Control.Feedback>
+    <>
+      <BodyStyle>
+        <Row>
+          <Col lg={8}>
+            <div className="StyleForm">
+              <Form className="Box-content">
+                <h1>สร้างโปรไฟล์</h1>
+                <div class="alert alert-primary d-flex align-items-center " role="alert">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-check-circle-fill" viewBox="0 0 16 16">
+                    <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z" />
+                  </svg>
+                  <div className='ms-3'>
+                    อีเมล <b>{currEmail}</b> ได้รับการยืนยันแล้ว
                   </div>
                 </div>
-              </div>
-              <div className="row1">
-                <Form.Label className="inputPassword5" >รหัสผ่าน</Form.Label>
-                <Form.Control type="password" placeholder="" required hasValidation isInvalid={passwordLengthValidate || passwordUpperCaseValidate} onChange={(e) => setPassword(e.target.value)} />
-                {passwordLengthValidate ? <Form.Control.Feedback type="invalid" > รหัสผ่านมี 6 ตัวอักษรขึ้นไป. </Form.Control.Feedback> : <Form.Label className="text-secondary">รหัสผ่านมี 6 ตัวอักษรขึ้นไป.</Form.Label>}
-                {passwordUpperCaseValidate ? <Form.Control.Feedback type="invalid" >มีตัวอักษรพิมพ์ใหญ่ 1 ตัว. </Form.Control.Feedback> : <p><Form.Label className="text-secondary">มีตัวอักษรพิมพ์ใหญ่ 1 ตัว.</Form.Label></p>}
-              </div>
-              <div>
-                <Form.Label>จังหวัด</Form.Label>
-                <Form.Select style={{ maxWidth: "400px" }} value={province} onChange={(e) => setProvince(e.target.value)}>
-                  <option value="1">กรุงเทพมหานคร</option>
-                  <option value="2">ชลบุรี</option>
-                  <option value="3">ตราด</option>
-                  <option value="4">เชียงใหม่</option>
-                </Form.Select>
-              </div>
-              <div>
-                <StyleBtnLogin>
-                  <Button className="login" href="#" variant="primary" onClick={() => handleRegister()}>
-                    สร้างบัญชี
-                  </Button>
-                </StyleBtnLogin>
-              </div>
-            </Form>
-          </div>
-        </Col>
-        <Col >
-          <div className="box-img">
-            <div className="Logo d-flex justify-content-center ">
-              <img className="logo-app" src={LogoApp} alt="logoapp" />
+                <div className="row1">
+                  <div className="row" style={{ marginTop: "24px" }}>
+                    <div className='col-6' style={{ padding: "0" }} >
+                      <Form.Label className="text_lable">ชื่อจริง</Form.Label>
+                      <Form.Control type="email" placeholder="" onChange={(e) => setFirstName(e.target.value)} required hasValidation isInvalid={firstNameValidate} />
+                      <Form.Control.Feedback type="invalid" >กรุณากรอกชื่อ </Form.Control.Feedback>
+                    </div>
+                    <div className='col-6' style={{ paddingRight: "0" }} >
+                      <Form.Label className="text_lable">นามสกุล</Form.Label>
+                      <Form.Control type="email" placeholder="" onChange={(e) => setLastName(e.target.value)} required hasValidation isInvalid={lastNameValidate} />
+                      <Form.Control.Feedback type="invalid" > กรุณากรอกนามสกุล </Form.Control.Feedback>
+                    </div>
+                  </div>
+                </div>
+                <div className="row1" style={{ marginTop: "24px" }}>
+                  <Form.Label className="inputPassword5" >รหัสผ่าน</Form.Label>
+                  <Form.Control type="password" placeholder="" required hasValidation isInvalid={passwordLengthValidate || passwordUpperCaseValidate} onChange={(e) => setPassword(e.target.value)} />
+                  {passwordLengthValidate ? <Form.Control.Feedback type="invalid" > รหัสผ่านมี 6 ตัวอักษรขึ้นไป. </Form.Control.Feedback> : <Form.Label className="text-secondary">รหัสผ่านมี 6 ตัวอักษรขึ้นไป.</Form.Label>}
+                  {passwordUpperCaseValidate ? <Form.Control.Feedback type="invalid" >มีตัวอักษรพิมพ์ใหญ่ 1 ตัว. </Form.Control.Feedback> : <p><Form.Label className="text-secondary">มีตัวอักษรพิมพ์ใหญ่ 1 ตัว.</Form.Label></p>}
+                </div>
+                <div style={{ marginTop: "24px" }}>
+                  <Form.Label>จังหวัด</Form.Label>
+                  <Form.Select style={{ maxWidth: "400px" }} value={province} onChange={(e) => setProvince(e.target.value)}>
+                    <option value="1">กรุงเทพมหานคร</option>
+                    <option value="2">ชลบุรี</option>
+                    <option value="3">ตราด</option>
+                    <option value="4">เชียงใหม่</option>
+                  </Form.Select>
+                </div>
+                <div>
+                  <StyleBtnLogin>
+                    <Button className="login" href="#" variant="primary" onClick={() => handleRegister()}>
+                      สร้างบัญชี
+                    </Button>
+                  </StyleBtnLogin>
+                </div>
+              </Form>
             </div>
-            <div className="d-flex justify-content-center mt-5 ">
-              <Row className="mt-5">
-                <Col sm="auto" style={{ padding: "0px" }}>
-                  <img className="bar3 d-inline text-end" src={barstep3} alt="barstep3" />
-                </Col>
-                <Col sm="auto" style={{ padding: "0px" }}>
-                  <div className="d-inline">
-                    <div className="inline-block lablefirst">กรอกอีเมล</div>
-                    <div className="inline-block lablefirst ">ยืนยันอีเมล</div>
-                    <div className="inline-block lablein ">สร้างโปรไฟล์</div>
-                    <div className="inline-block lable">เลือกสายงาน</div>
-                  </div>
-                </Col>
-                {/* <div className="d-inline">
+          </Col>
+          <Col style={{ padding: "0" }} >
+            <div className="box-img">
+              <div className="Logo d-flex justify-content-center ">
+                <img className="logo-app" src={LogoApp} alt="logoapp" />
+              </div>
+              <div className="d-flex justify-content-center mt-5 ">
+                <Row className="mt-5">
+                  <Col sm="auto" style={{ padding: "0px" }}>
+                    <img className="bar3 d-inline text-end" src={barstep3} alt="barstep3" />
+                  </Col>
+                  <Col sm="auto" style={{ padding: "0px" }}>
+                    <div className="d-inline">
+                      <div className="inline-block lablefirst">กรอกอีเมล</div>
+                      <div className="inline-block lablefirst ">ยืนยันอีเมล</div>
+                      <div className="inline-block lablein ">สร้างโปรไฟล์</div>
+                      <div className="inline-block lable">เลือกสายงาน</div>
+                    </div>
+                  </Col>
+                  {/* <div className="d-inline">
                 </div> */}
-              </Row>
+                </Row>
+              </div>
             </div>
-          </div>
-        </Col>
-      </Row>
+          </Col>
+        </Row>
 
-    </BodyStyle>
+      </BodyStyle>
+    </>
   )
 }

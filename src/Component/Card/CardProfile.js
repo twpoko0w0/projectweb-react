@@ -161,10 +161,6 @@ function CardProfile({ ownerProfile, projectDetail, currentUser, id, isUserJoin,
     const [buttonChange, setButtonChange] = useState(0)
     const [modalCancel, setModalCancel] = useState(false);
     // const []
-    useEffect(() => {
-
-    }, [buttonChange])
-
 
     const softwareElement = projectSoftwareRel.map(x => {
         const softwareName = software.find(y => y.id === x.project_software_id).user_software

@@ -20,7 +20,7 @@ export default function NavcatITems({ filrerItems, setItems, items, project, han
         style={{ padding: "8px 16px" }}
         className="Text_a"
         eventKey="0"
-        onClick={() => setItems(project)}
+        onClick={() => handleCategory("All")}
       >
         All
       </Nav.Link>

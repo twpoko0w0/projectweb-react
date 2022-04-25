@@ -100,7 +100,12 @@ export default function Card2({ project }) {
                       </div>
                       <br />
                       <div className="Grid_D" style={{ marginTop: "8px", float: "left" }}>
-                        <button className="lvwork">{x.project_seriousness_name}</button>{" "}
+                        <button className="lvwork"
+                          style={x.project_seriousness_name === "งานอดิเรก" ?
+                            { backgroundColor: "#1AC3CC", border: "1px solid #1AC3CC" } :
+                            { backgroundColor: "#FFA62B", border: "1px solid #FFA62B" }
+                          }
+                        >{x.project_seriousness_name}</button>{" "}
                       </div>
                     </Card.Body>
                   </Col>

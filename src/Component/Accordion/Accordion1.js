@@ -26,14 +26,22 @@ export default function AC1() {
     }, [])
 
     function GetQuestion() {
+        let isMounted = true;
         return new Promise((resolve, reject) => {
             axios.get(process.env.REACT_APP_API_ENDPOINT + "/api/projectquestion")
                 .then((res) => {
                     const resData = res.data
                     const thisProjectQuestion = resData.filter(x => x.project_id === parseInt(id) && x.project_answer !== "")
-                    setProjectQuestion(thisProjectQuestion)
+
+                    if (isMounted) {
+                        setProjectQuestion(thisProjectQuestion)
+                    }
+
                 });
             resolve()
+            return () => {
+                isMounted = false;
+            };
         })
     }
 

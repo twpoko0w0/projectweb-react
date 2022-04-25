@@ -65,6 +65,9 @@ height: 100vh;
     width: 100vw;
     z-index: -1;
   }
+//   .lock{
+//       display: flex;
+//   }
 `;
 
 function Tab1({ objectTag, currentUser, ownerProfile, projectDetail, id, isUserJoin, member, tagRel, projectTag, isUserMember, user, projectSoftwareRel, software, userJoinReq }) {
@@ -106,11 +109,11 @@ function Tab1({ objectTag, currentUser, ownerProfile, projectDetail, id, isUserJ
                     <Tab.Container style={{ height: "72px" }} defaultActiveKey="link-2" >
                         <Nav style={{ height: "72px" }} >
                             <Nav.Item
-                                className="Items-1"
+                                className="Items-1 "
                                 onClick={() => isUserMember === -1 ? setUndoModalShow(true) : null}
                             >
                                 <Nav.Link
-
+                                    className='d-flex'
                                     eventKey="link-1"
                                     style={
                                         currentUser.uid === ownerProfile.id
@@ -130,16 +133,13 @@ function Tab1({ objectTag, currentUser, ownerProfile, projectDetail, id, isUserJ
                                                     ? false
                                                     : true
                                     }
-
-
                                 >
                                     {currentUser.uid === ownerProfile.id ? null :
                                         isUserMember === -1 ? (
-                                            <span class="material-icons">lock</span>
+                                            <span className="material-icons">lock</span>
                                         ) : isUserJoin === -1 ? null : (
-                                            <span class="material-icons">lock</span>
+                                            <span className="material-icons">lock</span>
                                         )}
-
                                     รายละเอียด
                                 </Nav.Link>
                             </Nav.Item>

@@ -83,8 +83,12 @@ export default function Navcat({ project, items, setItems, searchTerm, projectTa
     let updateList = project;
 
     if (filterCategory) {
-      const filterProject = updateList.filter(x => x.project_category_name === filterCategory)
-      updateList = filterProject
+      if (filterCategory === "All") {
+        updateList = project
+      } else {
+        const filterProject = updateList.filter(x => x.project_category_name === filterCategory)
+        updateList = filterProject
+      }
     }
 
     if (filterTag) {
